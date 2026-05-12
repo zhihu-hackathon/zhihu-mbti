@@ -9,6 +9,13 @@ export function getAuthUrl(appId: string, redirectUri: string) {
   return `${ZHIHU_BASE_URL}/authorize?${params.toString()}`;
 }
 
+const fetchWithTimeout = (url: string, options: RequestInit, timeoutMs = 10000) => {
+  return fetch(url, {
+    ...options,
+    signal: AbortSignal.timeout(timeoutMs)
+  });
+};
+
 export async function exchangeCodeForToken(
   appId: string,
   appKey: string,
@@ -17,9 +24,8 @@ export async function exchangeCodeForToken(
   grantType: string
 ) {
   console.log(`appId: ${appId} appKey: ${appKey} redirect: ${redirectUri} grant: ${grantType} code: ${code}`);
-  const res = await fetch(`${ZHIHU_BASE_URL}/access_token`, {
+  const res = await fetchWithTimeout(`${ZHIHU_BASE_URL}/access_token`, {
     method: "POST",
-    //headers: { "Content-Type": "application/json" },
     body: new URLSearchParams({
       app_id: appId,
       app_key: appKey,
@@ -27,8 +33,7 @@ export async function exchangeCodeForToken(
       redirect_uri: redirectUri,
       code: code
     }),
-  });
-  console.log(res);
+  }, 20000);
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`Token exchange failed: ${res.status} ${text}`);

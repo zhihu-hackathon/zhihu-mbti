@@ -32,7 +32,8 @@ export async function GET(request: NextRequest) {
   try {
     const tokenData = await exchangeCodeForToken(clientId, clientSecret, redirectUri, code, "authorization_code");
     console.log(`token data access token: ${tokenData.access_token}`)
-    const res = NextResponse.redirect(new URL("/dashboard", request.url));
+    const dashboardUrl = new URL("/dashboard", process.env.APP_BASE_URL)
+    const res = NextResponse.redirect(dashboardUrl);
     res.cookies.set("oauth_state", "", { path: "/", maxAge: 0 });
     res.cookies.set("access_token", tokenData.access_token, {
       httpOnly: true,

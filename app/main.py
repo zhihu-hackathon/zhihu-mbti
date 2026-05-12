@@ -7,6 +7,9 @@ from contextlib import asynccontextmanager
 from sqlmodel import create_engine
 from app.api.routers import test, auth
 from pathlib import Path
+from utils.log import get_logger
+
+logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -18,9 +21,16 @@ async def lifespan(app: FastAPI):
     db_name = os.environ.get('DB_NAME', 'test')
     sql_url = f'mysql+pymysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
     sql_engine = create_engine(sql_url, echo=True)
-
     app.state.sql_engine = sql_engine
-    # app.state.dumy_job = DumyJob(executor=thread_pool_executor)
+
+    db_path = Path(__file__).parents[1].joinpath('data')
+    if db_path is None:
+        logger.info(f'{db_path} not set use the default db path')
+        if not db_path.exists():
+            db_path.mkdir(parents=True)
+    else:
+        logger.info(f'{str(db_path)} exist')
+
     try:
         yield
     finally:

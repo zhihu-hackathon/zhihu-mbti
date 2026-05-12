@@ -1,4 +1,4 @@
-const ZHIHU_API_BASE = process.env.ZHIHU_API_BASE;
+const ZHIHU_BASE_URL = process.env.ZHIHU_BASE_URL;
 
 export function getAuthUrl(appId: string, redirectUri: string) {
   const params = new URLSearchParams({
@@ -6,7 +6,7 @@ export function getAuthUrl(appId: string, redirectUri: string) {
     redirect_uri: redirectUri,
     response_type: "code"
   });
-  return `${ZHIHU_API_BASE}/authorize?${params.toString()}`;
+  return `${ZHIHU_BASE_URL}/authorize?${params.toString()}`;
 }
 
 export async function exchangeCodeForToken(
@@ -16,7 +16,7 @@ export async function exchangeCodeForToken(
   code: string,
   grantType: string
 ) {
-  const res = await fetch(`${ZHIHU_API_BASE}/access_token`, {
+  const res = await fetch(`${ZHIHU_BASE_URL}/access_token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: new URLSearchParams({
@@ -46,7 +46,7 @@ export async function fetchFollowedUsers(
   offset = 0,
   limit = 20
 ) {
-  const url = `${ZHIHU_API_BASE}/members/${username}/followees?limit=${limit}&offset=${offset}`;
+  const url = `${ZHIHU_BASE_URL}/members/${username}/followees?limit=${limit}&offset=${offset}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

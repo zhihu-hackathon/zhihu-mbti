@@ -68,7 +68,6 @@ export async function exchangeCodeForToken(
 
     const res = await fetchWithRetry(`${ZHIHU_BASE_URL}/access_token`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: new URLSearchParams({
         app_id: appId,
         app_key: appKey,

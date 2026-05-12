@@ -1,6 +1,4 @@
 
-import pRetry, { AbortError } from 'p-retry'
-
 const ZHIHU_BASE_URL = process.env.ZHIHU_BASE_URL;
 
 export function getAuthUrl(appId: string, redirectUri: string) {
@@ -43,7 +41,6 @@ export async function fetchWithRetry(
         return response;
       }
     } catch (err) {
-      // 网络错误（断网、DNS 失败等）也触发重试
       if (attempt >= retries) throw err;
     }
 
@@ -87,12 +84,33 @@ export async function exchangeCodeForToken(
     if (!res.ok) {
       const text = await res.text();
       if (res.status === 400 && text.includes('invalid_grant')) {
-        throw new AbortError('Invalid grant, aborting retries.');
+        throw new Error('Invalid grant, aborting retries.');
       }
       throw new Error(`HTTP ${res.status}: ${text}`);
     }
     return res.json() as Promise<{ access_token: string; token_type: string; expires_in: number; }>;
   }
+
+export async function fetchUserInfo(
+  accessToken: string
+) {
+  const url = `${ZHIHU_BASE_URL}/user`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return res.json() as Promise<{
+    uid: string;
+    fullname: string;
+    gender: string;
+    headline: string;
+    description: string;
+    avatar_path: string;
+    phone_no: string;
+    email: string;
+  }>;
+
+}
 
 export async function fetchFollowedUsers(
   accessToken: string,

@@ -27,7 +27,7 @@ export async function exchangeCodeForToken(
       code: code
     }),
   });
-
+  console.log(res);
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`Token exchange failed: ${res.status} ${text}`);

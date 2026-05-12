@@ -9,7 +9,6 @@ export async function GET() {
 
   const redirectUri = `${process.env.APP_BASE_URL || "http://localhost:8080"}/api/oauth/callback`;
   const state = crypto.randomUUID().replace(/-/g, "");
-  console.log(`state: ${state}`)
 
   const url = getAuthUrl(clientId, redirectUri);
 

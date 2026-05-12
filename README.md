@@ -1,4 +1,4 @@
-# Zhihu Labeler
+# Zhihu MBTI
 
 给你的知乎关注列表打标签，轻松管理关注的人。
 
@@ -22,9 +22,8 @@ npm run dev
 |--------|------|
 | `ZHIHU_CLIENT_ID` | 知乎开放平台 Client ID |
 | `ZHIHU_CLIENT_SECRET` | 知乎开放平台 Client Secret |
-| `ZHIHU_AUTH_URL` | 知乎oauth授权页 |
-| `ZHIHU_TOKEN_URL` | 知乎access token api |
-| `ZHIHU_API_BASE` | 知乎开放平台api base |
+| `ZHIHU_API_BASE` | 知乎开放平台 base api |
+| `ZHIHU_DATA_API_BASE` | 知乎数据平台 base api |
 | `APP_BASE_URL` | 应用部署地址（默认 http://localhost:8080） |
 
 ## 部署到 Vercel

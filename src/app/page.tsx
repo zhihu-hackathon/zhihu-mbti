@@ -26,7 +26,7 @@ export default function Home() {
 
         {/* 标题 */}
         <h1 className="text-5xl font-bold bg-gradient-to-r from-zhihu-blue to-indigo-600 bg-clip-text text-transparent mb-4 tracking-tight">
-          Zhihu Labeler
+          Zhihu MBTI
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
           给你的知乎关注列表打标签

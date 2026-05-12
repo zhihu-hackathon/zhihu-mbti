@@ -8,16 +8,12 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get("username");
-  if (!username) {
-    return NextResponse.json({ error: "username parameter required" }, { status: 400 });
-  }
 
-  const offset = parseInt(searchParams.get("offset") || "0", 10);
-  const limit = parseInt(searchParams.get("limit") || "20", 10);
+  const page = parseInt(searchParams.get("page") || "0", 0);
+  const perPage = parseInt(searchParams.get("per_page") || "10", 10);
 
   try {
-    const data = await fetchFollowedUsers(accessToken, username, offset, limit);
+    const data = await fetchFollowedUsers(accessToken, page, perPage);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Fetch followed users failed:", error);

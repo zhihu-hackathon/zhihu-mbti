@@ -7,8 +7,8 @@ from app.utils.log import get_logger
 logger = get_logger(__name__)
 
 router = APIRouter(
-    prefix='/tests',
-    tags=['Tests']
+    prefix='/users',
+    tags=['Users']
 )
 
 @router.get(

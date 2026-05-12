@@ -16,9 +16,10 @@ export async function exchangeCodeForToken(
   code: string,
   grantType: string
 ) {
+  console.log(`appId: ${appId} appKey: ${appKey} redirect: ${redirectUri} grant: ${grantType} code: ${code}`);
   const res = await fetch(`${ZHIHU_BASE_URL}/access_token`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    //headers: { "Content-Type": "application/json" },
     body: new URLSearchParams({
       app_id: appId,
       app_key: appKey,

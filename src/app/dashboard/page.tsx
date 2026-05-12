@@ -3,14 +3,16 @@
 import { useEffect, useState, useCallback } from "react";
 
 interface ZhihuUser {
-  id: string;
-  url_token: string;
-  name: string;
+  uid: number;
+  hash_id: string;
+  fullname: string;
+  gender: string;
   headline: string;
-  avatar_url: string;
-  follower_count: number;
-  answer_count: number;
-  articles_count: number;
+  description: string;
+  avatar_path: string;
+  url: string;
+  email: string;
+  phone_no: string;
 }
 
 interface LabelMap {

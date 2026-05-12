@@ -1,3 +1,6 @@
+
+import pRetry, { AbortError } from 'p-retry'
+
 const ZHIHU_BASE_URL = process.env.ZHIHU_BASE_URL;
 
 export function getAuthUrl(appId: string, redirectUri: string) {
@@ -9,13 +12,6 @@ export function getAuthUrl(appId: string, redirectUri: string) {
   return `${ZHIHU_BASE_URL}/authorize?${params.toString()}`;
 }
 
-const fetchWithTimeout = (url: string, options: RequestInit, timeoutMs = 10000) => {
-  return fetch(url, {
-    ...options,
-    signal: AbortSignal.timeout(timeoutMs)
-  });
-};
-
 export async function exchangeCodeForToken(
   appId: string,
   appKey: string,
@@ -23,36 +19,47 @@ export async function exchangeCodeForToken(
   code: string,
   grantType: string
 ) {
-  console.log(`appId: ${appId} appKey: ${appKey} redirect: ${redirectUri} grant: ${grantType} code: ${code}`);
-  const res = await fetchWithTimeout(`${ZHIHU_BASE_URL}/access_token`, {
-    method: "POST",
-    body: new URLSearchParams({
-      app_id: appId,
-      app_key: appKey,
-      grant_type: grantType,
-      redirect_uri: redirectUri,
-      code: code
-    }),
-  }, 20000);
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Token exchange failed: ${res.status} ${text}`);
-  }
+  const run = async (attempt: number) => {
+    console.log(`[Token Exchange] Attempt ${attempt}...`);
+    const res = await fetch(`${ZHIHU_BASE_URL}/access_token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: new URLSearchParams({
+        app_id: appId,
+        app_key: appKey,
+        grant_type: grantType,
+        redirect_uri: redirectUri,
+        code: code
+      }),
+    });
 
-  return res.json() as Promise<{
-    access_token: string;
-    token_type: string;
-    expires_in: number;
-  }>;
-}
+    if (res.status === 429) {
+      throw new Error(`Rate limited (${res.status})`);
+    }
+    if (!res.ok) {
+      const text = await res.text();
+      if (res.status === 400 && text.includes('invalid_grant')) {
+        throw new AbortError('Invalid grant, aborting retries.');
+      }
+      throw new Error(`HTTP ${res.status}: ${text}`);
+    }
+      return res.json() as Promise<{ access_token: string; token_type: string; expires_in: number; }>;
+    };
+
+    return pRetry(run, {
+      retries: 10,
+      onFailedAttempt: (error) => {
+        console.log(`Attempt ${error.attemptNumber} failed. ${error.retriesLeft} retries left.`);
+      },
+    });
+  }
 
 export async function fetchFollowedUsers(
   accessToken: string,
-  username: string,
-  offset = 0,
-  limit = 20
+  page = 0,
+  perPage = 20
 ) {
-  const url = `${ZHIHU_BASE_URL}/members/${username}/followees?limit=${limit}&offset=${offset}`;
+  const url = `${ZHIHU_BASE_URL}/user/followees?page=${page}&per_page=${perPage}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -63,18 +70,19 @@ export async function fetchFollowedUsers(
   }
 
   return res.json() as Promise<{
-    data: ZhihuUser[];
-    paging: { is_end: boolean; next: string; previous: string };
+    data: ZhihuUser[]
   }>;
 }
 
 export interface ZhihuUser {
-  id: string;
-  url_token: string;
-  name: string;
+  uid: number;
+  hash_id: string;
+  fullname: string;
+  gender: string;
   headline: string;
-  avatar_url: string;
-  follower_count: number;
-  answer_count: number;
-  articles_count: number;
+  description: string;
+  avatar_path: string;
+  url: string;
+  email: string;
+  phone_no: string;
 }

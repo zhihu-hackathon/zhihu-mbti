@@ -37,7 +37,7 @@ export default function Home() {
 
         {/* 登录按钮 */}
         <a
-          href="/api/auth/login"
+          href="/api/oauth/login"
           className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-zhihu-blue to-indigo-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-200 text-lg"
         >
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

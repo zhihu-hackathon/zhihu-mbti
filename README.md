@@ -22,16 +22,9 @@ npm run dev
 |--------|------|
 | `ZHIHU_CLIENT_ID` | 知乎开放平台 Client ID |
 | `ZHIHU_CLIENT_SECRET` | 知乎开放平台 Client Secret |
-| `ZHIHU_API_BASE` | 知乎开放平台 base api |
-| `ZHIHU_DATA_API_BASE` | 知乎数据平台 base api |
+| `ZHIHU_BASE_URL` | 知乎开放平台 base url |
+| `ZHIHU_DATA_BASE_URL` | 知乎数据平台 base url |
 | `APP_BASE_URL` | 应用部署地址（默认 http://localhost:8080） |
-
-## 部署到 Vercel
-
-1. 推送代码到 GitHub
-2. 在 Vercel 导入项目
-3. 在 Vercel 项目设置中配置环境变量
-4. 部署
 
 ## 功能
 

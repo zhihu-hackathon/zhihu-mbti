@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthUrl } from "@/lib/zhihu";
+import { getAuthUrl } from "@/lib/func";
 
 export async function GET() {
   const clientId = process.env.ZHIHU_CLIENT_ID;

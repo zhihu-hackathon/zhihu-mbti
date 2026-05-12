@@ -225,14 +225,14 @@ export default function Dashboard() {
           <div className="space-y-3">
             {filteredUsers.map((user) => (
               <div
-                key={user.id}
+                key={user.uid}
                 className="p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start gap-4">
                   {/* Avatar */}
                   <img
-                    src={user.avatar_url}
-                    alt={user.name}
+                    src={user.avatar_path}
+                    alt={user.fullname}
                     className="w-12 h-12 rounded-full flex-shrink-0"
                   />
 
@@ -240,15 +240,15 @@ export default function Dashboard() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                        {user.name}
+                        {user.fullname}
                       </h3>
                       <a
-                        href={`https://www.zhihu.com/people/${user.url_token}`}
+                        href={`https://www.zhihu.com/people/${user.url}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-zhihu-blue hover:underline text-sm"
                       >
-                        @{user.url_token}
+                        @{user.url}
                       </a>
                     </div>
                     {user.headline && (
@@ -257,32 +257,32 @@ export default function Dashboard() {
                       </p>
                     )}
                     <div className="flex gap-3 mt-1 text-xs text-gray-400 dark:text-gray-500">
-                      <span>{user.follower_count} 关注者</span>
-                      <span>{user.answer_count} 回答</span>
-                      <span>{user.articles_count} 文章</span>
+                      <span>关注者</span>
+                      <span>回答</span>
+                      <span>文章</span>
                     </div>
 
                     {/* Labels */}
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      {(labels[user.id] || []).map((label, i) => (
+                      {(labels[user.uid] || []).map((label, i) => (
                         <span
                           key={label}
                           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${getLabelColor(i)}`}
                         >
                           {label}
                           <button
-                            onClick={() => removeLabel(user.id, label)}
+                            onClick={() => removeLabel(user.uid.toString(), label)}
                             className="hover:opacity-70 transition-opacity"
                           >
                             ×
                           </button>
                         </span>
                       ))}
-                      {activeLabelInput === user.id ? (
+                      {activeLabelInput === user.uid.toString() ? (
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();
-                            addLabel(user.id, newLabel);
+                            addLabel(user.uid.toString(), newLabel);
                           }}
                           className="inline-flex"
                         >
@@ -294,7 +294,7 @@ export default function Dashboard() {
                             autoFocus
                             onBlur={() => {
                               if (newLabel.trim()) {
-                                addLabel(user.id, newLabel);
+                                addLabel(user.uid.toString(), newLabel);
                               } else {
                                 setActiveLabelInput(null);
                               }
@@ -305,7 +305,7 @@ export default function Dashboard() {
                       ) : (
                         <button
                           onClick={() => {
-                            setActiveLabelInput(user.id);
+                            setActiveLabelInput(user.uid.toString());
                             setNewLabel("");
                           }}
                           className="px-2 py-0.5 rounded-full text-xs border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-zhihu-blue hover:border-zhihu-blue transition-colors"

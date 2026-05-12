@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知否知否 · 应是16种神人之一</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#000;--paper:#fff;--ash:#888;--smoke:#f5f5f5;--line:rgba(0,0,0,.12)}
+html,body{background:#fff;color:#000;font-family:"Source Serif 4",Georgia,"Noto Serif SC",serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.display{font-family:"Playfair Display","Noto Serif SC",serif}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.label{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.bg-grid{background-image:linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px);background-size:40px 40px}
+.bg-lines{background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,0,0,.03) 1px,rgba(0,0,0,.03) 2px);background-size:100% 4px}
+.bg-ink{background:#000;color:#fff}
+.bg-ink .label{color:#fff}
+::selection{background:#000;color:#fff}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#000}
+::-webkit-scrollbar-track{background:#f5f5f5}
+
+/* ============ 全局容器 ============ */
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.container{padding:0 20px}}
+
+/* ============ 顶部品牌栏 ============ */
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #000;padding:16px 0}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between}
+.topbar .brand{font-family:"Playfair Display",serif;font-weight:900;font-size:22px;letter-spacing:-.01em}
+.topbar .brand em{font-style:italic;font-weight:400}
+.topbar .nav{display:flex;gap:24px}
+.topbar .nav a{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding-bottom:2px;border-bottom:1px solid transparent}
+.topbar .nav a:hover{border-bottom-color:#000}
+@media(max-width:640px){.topbar .nav{display:none}}
+
+/* ============ Hero ============ */
+.hero{padding:80px 0 100px;border-bottom:1px solid #000;position:relative}
+.hero .eyebrow{display:flex;align-items:center;gap:16px;margin-bottom:40px}
+.hero .eyebrow .bar{flex:0 0 48px;height:1px;background:#000}
+.hero h1{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:clamp(72px,14vw,180px);line-height:.95;letter-spacing:-.04em;margin-bottom:24px}
+.hero h1 em{font-style:italic;font-weight:400}
+.hero .sub{font-family:"Playfair Display",serif;font-style:italic;font-size:clamp(20px,3vw,32px);color:#444;margin-bottom:56px;max-width:720px}
+.hero .input-row{display:flex;gap:0;max-width:720px;border:1px solid #000}
+.hero input{flex:1;border:none;background:transparent;padding:20px 24px;font-family:"Source Serif 4",serif;font-size:18px;outline:none}
+.hero button.cta{padding:20px 36px;background:#000;color:#fff;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.25em;text-transform:uppercase;transition:background .1s,color .1s}
+.hero button.cta:hover{background:#fff;color:#000;box-shadow:inset 0 0 0 1px #000}
+.hero .or{margin-top:28px;display:flex;align-items:center;gap:16px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#666}
+.hero .or .line{flex:0 0 32px;height:1px;background:#ccc}
+.hero .or a{border-bottom:1px solid #000;padding-bottom:2px;color:#000}
+
+/* 大号水印标号 */
+.hero-num{position:absolute;top:80px;right:32px;font-family:"Playfair Display",serif;font-style:italic;font-size:160px;line-height:1;color:rgba(0,0,0,.06);pointer-events:none}
+@media(max-width:900px){.hero-num{display:none}}
+
+/* ============ Section 通用 ============ */
+.section{padding:100px 0;border-bottom:1px solid #000}
+.section-head{display:grid;grid-template-columns:1fr 2fr;gap:40px;margin-bottom:64px;align-items:end}
+@media(max-width:768px){.section-head{grid-template-columns:1fr;gap:16px}}
+.section-head .meta .label{display:block;margin-bottom:16px;color:#666}
+.section-head h2{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-.03em}
+.section-head h2 em{font-style:italic;font-weight:400}
+.section-head .desc{font-style:italic;font-size:20px;color:#333;max-width:640px;padding-top:8px;border-top:1px solid #000}
+
+/* ============ 16 人格 网格 ============ */
+.persona-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #000}
+@media(max-width:900px){.persona-grid{grid-template-columns:repeat(2,1fr)}}
+.persona-card{position:relative;padding:28px 24px 28px;border-right:1px solid #000;border-bottom:1px solid #000;background:#fff;cursor:pointer;transition:background .1s,color .1s;min-height:240px;display:flex;flex-direction:column;justify-content:space-between}
+.persona-card:nth-child(4n){border-right:none}
+@media(max-width:900px){.persona-card:nth-child(4n){border-right:1px solid #000}.persona-card:nth-child(2n){border-right:none}}
+.persona-card:hover{background:#000;color:#fff}
+.persona-card:hover .p-meta,.persona-card:hover .p-slogan{color:rgba(255,255,255,.7)}
+.persona-card .p-num{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:#aaa;position:absolute;top:16px;left:24px}
+.persona-card .p-emoji{position:absolute;top:20px;right:20px;font-size:28px;opacity:.9}
+.persona-card .p-code{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.25em;margin-top:32px;margin-bottom:8px}
+.persona-card .p-namezh{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:24px;line-height:1.15;margin-bottom:6px;letter-spacing:-.01em}
+.persona-card .p-nameen{font-family:"Playfair Display",serif;font-style:italic;font-size:13px;color:#888;margin-bottom:16px}
+.persona-card:hover .p-nameen{color:rgba(255,255,255,.5)}
+.persona-card .p-slogan{font-style:italic;font-size:13px;color:#444;line-height:1.5;border-top:1px solid currentColor;padding-top:12px;margin-top:auto}
+.persona-card.ssr::before{content:"SSR";position:absolute;top:0;right:0;background:#000;color:#fff;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;padding:4px 10px}
+.persona-card.ssr:hover::before{background:#fff;color:#000}
+
+/* ============ 样本档案 profile ============ */
+.profile-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start}
+@media(max-width:900px){.profile-grid{grid-template-columns:1fr;gap:40px}}
+.profile-left .avatar{width:120px;height:120px;border:1px solid #000;background:#f5f5f5;margin-bottom:24px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.profile-left .u-name{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:48px;line-height:1;margin-bottom:8px;letter-spacing:-.02em}
+.profile-left .u-alias{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:#888;margin-bottom:16px}
+.profile-left .u-bio{font-style:italic;font-size:16px;color:#444;margin-bottom:32px;max-width:480px}
+.profile-left .primary{padding:24px 0;border-top:1px solid #000;border-bottom:1px solid #000;margin-bottom:32px}
+.profile-left .primary .label{color:#666;margin-bottom:12px;display:block}
+.profile-left .primary .p-namezh{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:56px;line-height:1;margin-bottom:8px;letter-spacing:-.02em}
+.profile-left .primary .p-code-line{display:flex;align-items:baseline;gap:16px;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.2em}
+.profile-left .primary .percent{font-family:"Playfair Display",serif;font-style:italic;font-size:24px;font-weight:400;letter-spacing:0}
+.profile-left .secondary{display:flex;gap:16px;align-items:center;margin-bottom:32px;color:#666}
+.profile-left .secondary .label{color:#888}
+.profile-left .secondary strong{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:20px;color:#000;letter-spacing:-.01em}
+
+/* ai comments block */
+.comments{border:1px solid #000;padding:28px 28px 24px;background:#fff}
+.comments-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;border-bottom:1px solid #000;padding-bottom:16px}
+.comments-head h4{font-family:"Playfair Display",serif;font-weight:700;font-size:22px;letter-spacing:-.01em}
+.comments-head h4 em{font-style:italic;font-weight:400;color:#666}
+.tone-switch{display:inline-flex;border:1px solid #000}
+.tone-switch button{padding:6px 14px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;border-right:1px solid #000}
+.tone-switch button:last-child{border-right:none}
+.tone-switch button.active{background:#000;color:#fff}
+.comments ul{list-style:none}
+.comments li{display:flex;gap:16px;padding:14px 0;border-bottom:1px dashed #ccc;font-size:15px;line-height:1.55}
+.comments li:last-child{border-bottom:none}
+.comments li .idx{font-family:"JetBrains Mono",monospace;font-size:11px;color:#888;flex:0 0 28px;padding-top:4px}
+
+/* radar svg */
+.radar-box{border:1px solid #000;padding:24px;background:#fff}
+.radar-box .rh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #000}
+.radar-box .rh h4{font-family:"Playfair Display",serif;font-weight:700;font-size:18px}
+.radar-box svg{width:100%;height:auto;display:block}
+.radar-box .rkey{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid #000}
+.radar-box .rkey div{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;display:flex;justify-content:space-between;padding:2px 0}
+.radar-box .rkey div span:last-child{font-weight:700}
+
+/* partner / enemy pair */
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.pair-cell{border:1px solid #000;padding:20px;transition:all .1s;cursor:pointer}
+.pair-cell:hover{background:#000;color:#fff}
+.pair-cell .label{color:#666;margin-bottom:8px;display:block}
+.pair-cell:hover .label{color:rgba(255,255,255,.6)}
+.pair-cell .pc-name{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:20px;letter-spacing:-.01em}
+.pair-cell .pc-emoji{font-size:20px;margin-bottom:6px}
+
+/* actions row */
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn-line{padding:14px 24px;border:1px solid #000;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.25em;text-transform:uppercase;transition:all .1s;background:#fff;color:#000}
+.btn-line:hover{background:#000;color:#fff}
+.btn-filled{padding:14px 24px;background:#000;color:#fff;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.25em;text-transform:uppercase;transition:all .1s}
+.btn-filled:hover{background:#fff;color:#000;box-shadow:inset 0 0 0 1px #000}
+
+/* ============ 分享卡 preview ============ */
+.card-preview-wrap{display:flex;justify-content:center;margin-top:40px}
+.share-card{width:360px;background:#fff;border:1px solid #000;padding:32px 28px;position:relative;box-shadow:8px 8px 0 #000}
+.share-card .sc-num{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:#888;margin-bottom:24px;display:flex;justify-content:space-between}
+.share-card .sc-name{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:36px;line-height:1;margin-bottom:12px;letter-spacing:-.02em}
+.share-card .sc-namen{font-family:"Playfair Display",serif;font-style:italic;font-size:14px;color:#666;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #000}
+.share-card .sc-slogan{font-style:italic;font-size:15px;line-height:1.5;padding:16px 0;border-bottom:1px solid #000;margin-bottom:16px;min-height:90px}
+.share-card .sc-foot{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.2em;color:#666;text-transform:uppercase;margin-top:16px;padding-top:16px;border-top:1px solid #000;display:flex;justify-content:space-between}
+
+/* ============ Quiz 试玩 ============ */
+.quiz-box{max-width:780px;margin:0 auto;border:1px solid #000;padding:48px 40px;background:#fff}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #000}
+.quiz-top .q-num{font-family:"Playfair Display",serif;font-weight:900;font-size:48px;line-height:1}
+.quiz-top .q-num em{font-style:italic;font-weight:400;color:#888}
+.quiz-top .q-progress{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;color:#888}
+.quiz-question{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:26px;line-height:1.35;margin-bottom:32px;letter-spacing:-.01em}
+.quiz-options{display:grid;gap:12px}
+.quiz-option{text-align:left;padding:20px 24px;border:1px solid #000;background:#fff;font-family:"Source Serif 4",serif;font-size:16px;line-height:1.4;transition:all .1s;position:relative}
+.quiz-option::before{content:"A.";position:absolute;left:-1px;top:-1px;bottom:-1px;width:44px;background:#000;color:#fff;font-family:"JetBrains Mono",monospace;font-size:11px;display:flex;align-items:center;justify-content:center;letter-spacing:.1em}
+.quiz-option{padding-left:64px}
+.quiz-option.opt-b::before{content:"B."}
+.quiz-option:hover{background:#000;color:#fff}
+.quiz-option:hover::before{background:#fff;color:#000}
+
+/* ============ Footer ============ */
+.footer{padding:60px 0;background:#000;color:#fff}
+.footer .label{color:rgba(255,255,255,.5)}
+.footer .foot-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-bottom:40px}
+@media(max-width:768px){.footer .foot-grid{grid-template-columns:1fr}}
+.footer h5{font-family:"Playfair Display",serif;font-weight:700;font-size:20px;margin-bottom:12px}
+.footer p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6}
+.footer .copy{padding-top:24px;border-top:1px solid rgba(255,255,255,.2);font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.5);text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+/* ============ Modal ============ */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px}
+.modal-mask.open{display:flex}
+.modal{background:#fff;max-width:720px;width:100%;border:1px solid #000;box-shadow:12px 12px 0 #000;position:relative}
+.modal-head{padding:40px 40px 28px;border-bottom:1px solid #000;position:relative}
+.modal-head .m-num{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;color:#888;margin-bottom:16px}
+.modal-head .m-emoji{font-size:48px;margin-bottom:16px}
+.modal-head .m-namezh{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:56px;line-height:1;letter-spacing:-.03em;margin-bottom:8px}
+.modal-head .m-nameen{font-family:"Playfair Display",serif;font-style:italic;font-size:18px;color:#666}
+.modal-head .m-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border:1px solid #000;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .1s}
+.modal-head .m-close:hover{background:#000;color:#fff}
+.modal-body{padding:32px 40px 40px}
+.modal-body .m-slogan{font-family:"Playfair Display","Noto Serif SC",serif;font-style:italic;font-size:22px;line-height:1.4;padding:16px 24px;border-left:3px solid #000;background:#f5f5f5;margin-bottom:28px}
+.modal-body .m-long{font-size:16px;line-height:1.75;color:#222;white-space:pre-line;margin-bottom:28px}
+.modal-body .m-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #000;margin-bottom:24px}
+.modal-body .m-stats div{padding:16px;border-right:1px solid #000;text-align:center}
+.modal-body .m-stats div:last-child{border-right:none}
+.modal-body .m-stats .label{color:#888;margin-bottom:6px;display:block}
+.modal-body .m-stats strong{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:18px;letter-spacing:-.01em}
+@media(max-width:640px){.modal-head{padding:28px 24px 20px}.modal-body{padding:24px}.modal-head .m-namezh{font-size:40px}}
+
+/* ============ fake analyze 弹窗 ============ */
+.analyze-mask{position:fixed;inset:0;background:#fff;z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;padding:40px}
+.analyze-mask.open{display:flex}
+.analyze-mask .a-label{margin-bottom:40px;color:#666}
+.analyze-mask h3{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:700;font-size:clamp(32px,5vw,56px);line-height:1.2;text-align:center;max-width:820px;margin-bottom:56px;font-style:italic}
+.analyze-mask .bar-wrap{width:min(480px,90vw);height:2px;background:#eee}
+.analyze-mask .bar{height:100%;background:#000;width:0;transition:width .3s linear}
+.analyze-mask .a-pct{margin-top:20px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;color:#888}
+</style>
+</head>
+<body>
+
+<!-- ========== TOPBAR ========== -->
+<header class="topbar">
+  <div class="container topbar-inner">
+    <div class="brand">知否知否 <em>· A Field Guide</em></div>
+    <nav class="nav">
+      <a href="#personas">Field Guide</a>
+      <a href="#profile">Sample</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero bg-lines">
+  <div class="hero-num">No.001</div>
+  <div class="container">
+    <div class="eyebrow"><span class="bar"></span><span class="label">Zhihu · Behavioral Taxonomy · 2026</span></div>
+    <h1>知否<br><em>知否</em></h1>
+    <p class="sub">应是 16 种神人之一 —— 一份关于"你被知乎驯化成什么样了"的田野图鉴。</p>
+    <div class="input-row">
+      <input id="url-input" placeholder="粘贴你的知乎主页链接，如 zhihu.com/people/zhang-jia-wei" />
+      <button class="cta" onclick="fakeAnalyze()">测一测</button>
+    </div>
+    <div class="or"><span class="line"></span>不想暴露？<a href="#quiz">做 15 题问卷版</a></div>
+  </div>
+</section>
+
+<!-- ========== 16 人格 ========== -->
+<section class="section bg-grid" id="personas">
+  <div class="container">
+    <div class="section-head">
+      <div class="meta">
+        <span class="label">Chapter I · 16 Types</span>
+        <h2>十六种<br><em>神人</em></h2>
+      </div>
+      <p class="desc">从「赛博电子仓鼠」到「无痕冲浪祖师爷」—— 16 种被知乎生态塑形而成的当代精神样本。点击任意卡片查看完整画像。</p>
+    </div>
+    <div class="persona-grid" id="persona-grid"></div>
+  </div>
+</section>
+
+<!-- ========== 样本档案 ========== -->
+<section class="section" id="profile">
+  <div class="container">
+    <div class="section-head">
+      <div class="meta">
+        <span class="label">Chapter II · Specimen 01</span>
+        <h2>样本<br><em>档案</em></h2>
+      </div>
+      <p class="desc">当你把"张某佳玮"的主页 URL 喂给知否知否，它会把这 4200 字回答、13 学科引用、87% 的"谢邀"解读成一句判决。</p>
+    </div>
+
+    <div class="profile-grid">
+      <div class="profile-left">
+        <div class="avatar">💼</div>
+        <div class="u-name">张某佳玮</div>
+        <div class="u-alias">ALIAS · PUBLIC FIGURE</div>
+        <div class="u-bio">体育 / 历史 / 文学 / 装x。谢邀，人在 NBA，刚下赛场。</div>
+
+        <div class="primary">
+          <span class="label">Primary Persona</span>
+          <div class="p-namezh">精神年薪百万 💼</div>
+          <div class="p-code-line">
+            <span>CODE · FAKE</span>
+            <span class="percent">Match · 87%</span>
+          </div>
+        </div>
+
+        <div class="secondary">
+          <span class="label">Secondary ——</span>
+          <strong>谢邀型表演艺术家 🎭</strong>
+          <span class="label">/ 64%</span>
+        </div>
+
+        <div class="actions">
+          <button class="btn-filled" onclick="document.getElementById('share-preview').scrollIntoView({behavior:'smooth'})">Generate Share Card</button>
+          <button class="btn-line" onclick="openPersona('FAKE')">View Persona</button>
+        </div>
+      </div>
+
+      <div class="profile-right">
+        <!-- 雷达图 -->
+        <div class="radar-box">
+          <div class="rh"><h4>Radar · 6-Dim</h4><span class="label">v2.6</span></div>
+          <svg viewBox="0 0 400 400" id="radar-svg"></svg>
+          <div class="rkey" id="radar-key"></div>
+        </div>
+
+        <!-- AI 吐槽 -->
+        <div class="comments" style="margin-top:24px">
+          <div class="comments-head">
+            <h4>AI · <em>Commentary</em></h4>
+            <div class="tone-switch" id="tone-switch">
+              <button data-tone="serious" class="active">Serious</button>
+              <button data-tone="roast">Roast</button>
+              <button data-tone="cute">Cute</button>
+            </div>
+          </div>
+          <ul id="tone-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 分享卡 preview ========== -->
+<section class="section bg-ink" id="share-preview">
+  <div class="container">
+    <div class="section-head">
+      <div class="meta">
+        <span class="label">Chapter III · Share Card</span>
+        <h2 style="color:#fff">分享<br><em>一纸</em></h2>
+      </div>
+      <p class="desc" style="color:rgba(255,255,255,.75);border-color:#fff">一张 1080×1350 的黑白肖像卡。适合发朋友圈，适合羞辱朋友，也适合你自己下次回头看。</p>
+    </div>
+
+    <div class="card-preview-wrap">
+      <div class="share-card">
+        <div class="sc-num"><span>NO. 005 / 16</span><span>ZHIFOU · 2026</span></div>
+        <div class="sc-name">精神年薪百万</div>
+        <div class="sc-namen">Mentally Millionaire · FAKE</div>
+        <div class="sc-slogan">"谢邀，人在纽约，刚下飞机。年薪百万在知乎刚过温饱线。"</div>
+        <div class="sc-foot"><span>@张某佳玮</span><span>ZHIFOU.APP</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Quiz ========== -->
+<section class="section" id="quiz">
+  <div class="container">
+    <div class="section-head">
+      <div class="meta">
+        <span class="label">Chapter IV · Quiz</span>
+        <h2>不想<br><em>暴露？</em></h2>
+      </div>
+      <p class="desc">15 道情境题。每道都二选一。每道都会暴露你。这里放一题你感受下——</p>
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-top">
+        <div class="q-num"><em>Q</em>.01</div>
+        <div class="q-progress">Question 01 / 15</div>
+      </div>
+      <div class="quiz-question" id="quiz-q">刷到一篇万字干货《30 天精通 Python》，你的第一反应是？</div>
+      <div class="quiz-options" id="quiz-opts">
+        <button class="quiz-option" onclick="nextQuiz(0)">马住，下次一定看（点击收藏 ⭐）</button>
+        <button class="quiz-option opt-b" onclick="nextQuiz(1)">拉到底，评论一句「大佬牛逼」</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Footer / About ========== -->
+<footer class="footer" id="about">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <span class="label">About</span>
+        <h5 style="margin-top:12px">知否知否</h5>
+        <p>一份关于当代知乎用户的黑白肖像集。16 种神人类型，改写自你每天被驯化的刷帖姿势。</p>
+      </div>
+      <div>
+        <span class="label">Disclaimer</span>
+        <h5 style="margin-top:12px">演示数据</h5>
+        <p>本站所有用户数据均为虚构，与真人无关。所谓"AI 分析"实为预写文案的随机展示，请当赛博相声看。</p>
+      </div>
+      <div>
+        <span class="label">Credits</span>
+        <h5 style="margin-top:12px">Built with ✎</h5>
+        <p>Next.js · TailwindCSS · Recharts · Playfair Display · Source Serif 4 · Made for Demo</p>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 · ZHIFOU · A Field Guide to Zhihu Netizens</span>
+      <span>单文件演示版 · v1.0</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== Modal ========== -->
+<div class="modal-mask" id="modal-mask" onclick="if(event.target.id==='modal-mask')closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <button class="m-close" onclick="closeModal()">×</button>
+      <div class="m-num" id="m-num"></div>
+      <div class="m-emoji" id="m-emoji"></div>
+      <div class="m-namezh" id="m-namezh"></div>
+      <div class="m-nameen" id="m-nameen"></div>
+    </div>
+    <div class="modal-body">
+      <div class="m-slogan" id="m-slogan"></div>
+      <div class="m-long" id="m-long"></div>
+      <div class="m-stats">
+        <div><span class="label">Code</span><strong id="m-code"></strong></div>
+        <div><span class="label">Rarity</span><strong id="m-rarity"></strong></div>
+        <div><span class="label">Theme</span><strong id="m-theme"></strong></div>
+      </div>
+      <div class="pair-row">
+        <div class="pair-cell" id="m-partner">
+          <span class="label">Partner · 官配</span>
+          <div class="pc-emoji" id="m-partner-emoji"></div>
+          <div class="pc-name" id="m-partner-name"></div>
+        </div>
+        <div class="pair-cell" id="m-enemy">
+          <span class="label">Enemy · 死敌</span>
+          <div class="pc-emoji" id="m-enemy-emoji"></div>
+          <div class="pc-name" id="m-enemy-name"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Fake Analyze ========== -->
+<div class="analyze-mask" id="analyze-mask">
+  <div class="a-label label">Analyzing · Zhihu · Behavioral Footprint</div>
+  <h3 id="analyze-text">正在调取你近 365 天的收藏夹 ...</h3>
+  <div class="bar-wrap"><div class="bar" id="analyze-bar"></div></div>
+  <div class="a-pct"><span id="analyze-pct">0</span>%</div>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const PERSONAS = [
+  {code:"MARK",nameZh:"赛博电子仓鼠",nameEn:"Cyber Hamster",emoji:"🐹",slogan:"马了就等于学了，进了收藏夹就是我脑子里的了。",longDesc:"看到一切看上去有用的内容都疯狂点击 ⭐：《零基础学 Python》《30 天搞定副业》《人生必看的 100 本书》……\n\n收藏夹里囤了几千篇知识贴，但你从未真正打开过其中任何一篇。马住的瞬间，多巴胺已经分泌完毕，剩下的事下次一定。\n\n你不是在学习，你是在赛博囤积，是知识焦虑时代的虚假繁荣本荣。",radar:{抬杠:1,吃瓜:2,摸鱼:4,emo:3,装x:2,潜水:3},partnerCode:"AFKK",enemyCode:"ROAM",rarity:"common",themeColor:"#f59e0b"},
+  {code:"MELO",nameZh:"全职吃瓜猹",nameEn:"Full-time Melon-eating Zha",emoji:"🍉",slogan:"前排出售瓜子矿泉水，麻烦楼下把事情搞大点。",longDesc:"出轨反转、奇葩相亲、大厂裁员、明星塌房——只要有瓜，你的雷达永远第一时间锁定。\n\n白天上班唯唯诺诺，夜里在评论区重拳出击。借鲁迅闰土与猹之名，你把「看戏」升华成了一种生活方式。\n\n你不参与，你只观察。但你的观察精度，足够写一本《人间真实图鉴》。",radar:{抬杠:2,吃瓜:5,摸鱼:3,emo:2,装x:1,潜水:4},partnerCode:"SOAP",enemyCode:"NERD",rarity:"common",themeColor:"#ec4899"},
+  {code:"BUTT",nameZh:"野生纯血杠精",nameEn:"Pure-blood Arguer",emoji:"⚔️",slogan:"先问是不是，再问为什么。你这话逻辑漏洞有三……",longDesc:"别人发个搞笑段子，你在评论区用物理学原理证明这不可能。别人秀恩爱，你科普婚恋市场的统计学陷阱。\n\n最爱看「大V被打脸」、「反转」、「实锤」。对煽情免疫，只看 Fact Check。你的人生信条：宁可错杠一千，不能放过一个。\n\n但讲真，你又聪明又不好惹。",radar:{抬杠:5,吃瓜:3,摸鱼:2,emo:1,装x:3,潜水:1},partnerCode:"NULL",enemyCode:"CLAP",rarity:"common",themeColor:"#ef4444"},
+  {code:"EMOO",nameZh:"纯血内耗圣体",nameEn:"Holy Body of Internal Friction",emoji:"🌧️",slogan:"懂得那么多大道理，依然过不好这一生。",longDesc:"你的搜索记录是当代青年的精准画像：《25 岁存款 10 万算差吗》《怎么判断 ta 喜不喜欢我》《人到三十还来得及吗》。\n\n你看完所有高赞心理学回答，依然在凌晨三点辗转反侧。鸡汤喝了一锅又一锅，胃却越喝越虚。\n\n知乎是你的赛博树洞，也是你最大的焦虑放大器。",radar:{抬杠:1,吃瓜:2,摸鱼:2,emo:5,装x:2,潜水:3},partnerCode:"AOLD",enemyCode:"AFKK",rarity:"common",themeColor:"#8b5cf6"},
+  {code:"FAKE",nameZh:"精神年薪百万",nameEn:"Mentally Millionaire",emoji:"💼",slogan:"谢邀，人在纽约，刚下飞机。年薪百万在知乎刚过温饱线。",longDesc:"你的首页推荐永远是《保时捷卡宴选配指南》《年薪百万如何避税》《北京三套房如何打理》。打开知乎那一刻，你就活在了精英平行宇宙。\n\n现实里花呗都还吃力，知乎里你已经在和大佬讨论 SP500 配置策略。这不是装，这是一种精神富贵——一种来自「逼乎」老派传统的优雅修养。\n\n人在纽约，刚下飞机，利益相关，匿了。",radar:{抬杠:2,吃瓜:2,摸鱼:1,emo:3,装x:5,潜水:2},partnerCode:"XEYO",enemyCode:"AOLD",rarity:"common",themeColor:"#06b6d4"},
+  {code:"NERD",nameZh:"无效硬核学霸",nameEn:"Useless Hardcore Nerd",emoji:"🧠",slogan:"月薪三千，心系宇宙。这题的本质是量子纠缠。",longDesc:"你订阅了天文学、宏观经济、中东地缘政治、明史、量子力学、SCI 前沿……\n\n国家大事倒背如流，朋友聚会无人能敌。但回到现实，你依然不知道自己要做什么、爱什么、能成为谁。\n\n知识是你的盔甲，也是你的舒适区。世界很大，你只想留在大脑里。",radar:{抬杠:4,吃瓜:1,摸鱼:2,emo:3,装x:4,潜水:4},partnerCode:"INVI",enemyCode:"SOAP",rarity:"common",themeColor:"#3b82f6"},
+  {code:"ROAM",nameZh:"顶级赛博街溜子",nameEn:"Cyber Street Loiterer",emoji:"🛹",slogan:"刷知乎就像逛菜市场，不管荤素，都得瞅两眼。",longDesc:"你没有任何固定偏好。汽车、数码、宠物、八卦、宇宙、宏观、爽文……每条停留 8 秒，然后下拉。\n\n算法已经放弃了你。你的首页推荐推什么都不准，因为你什么都看一眼，又什么都不深入。\n\n你不是在阅读，你是在用刷帖代替呼吸。这是赛博时代最朴素的禅。",radar:{抬杠:1,吃瓜:4,摸鱼:5,emo:2,装x:1,潜水:2},partnerCode:"MIDD",enemyCode:"MARK",rarity:"common",themeColor:"#10b981"},
+  {code:"CLAP",nameZh:"知识区捧哏大王",nameEn:"Knowledge Area Flatterer",emoji:"👏",slogan:"虽然没看懂，但大受震撼。牛逼（破音）！",longDesc:"看到几万字带图表的硬核分析，你根本懒得看完。直接拉到最底，点个赞，留一句「大佬牛逼」，然后就感觉自己也跟着变聪明了。\n\n这是当代最高效的伪求知欲实践——零成本完成一次智识满足。\n\n你不是不想学，你只是发明了「装作学过」这门艺术。",radar:{抬杠:1,吃瓜:3,摸鱼:4,emo:1,装x:3,潜水:2},partnerCode:"SAVE",enemyCode:"BUTT",rarity:"common",themeColor:"#eab308"},
+  {code:"SOAP",nameZh:"盐言爽文重度毒贩",nameEn:"Salt Story Addict",emoji:"📖",slogan:"看正经回答我打瞌睡，看霸总复仇我通宵熬夜。",longDesc:"明明是个知识社区，你却把它当晋江刷。「有哪些细思极恐的故事」下面一蹲就是一通宵。\n\n为了看大结局甚至偷偷充了盐选会员。你知道这是知乎「故事会」化的悲剧，但你享受其中。\n\n人间真实在这里被加工成了快消爽文，你边骂边吞，停不下来。",radar:{抬杠:1,吃瓜:5,摸鱼:4,emo:4,装x:1,潜水:3},partnerCode:"MELO",enemyCode:"NERD",rarity:"common",themeColor:"#f97316"},
+  {code:"AFKK",nameZh:"佛系摸鱼吗喽",nameEn:"Buddhist Slacking Monkey",emoji:"🐒",slogan:"打工是不可能打工的，只要我躺得平，老板就画不到我。",longDesc:"你的关注列表全是《上班摸鱼有什么高级技巧》《如何体面拒绝加班》《一线城市平替生活》。\n\n看到资本家被挂在路灯上的回答立刻 +1。你不是不努力，你只是看穿了努力的边际收益。\n\n人生是个副本，而你只是一只悠然吃香蕉的吗喽。",radar:{抬杠:2,吃瓜:3,摸鱼:5,emo:3,装x:1,潜水:3},partnerCode:"MARK",enemyCode:"EMOO",rarity:"common",themeColor:"#84cc16"},
+  {code:"AOLD",nameZh:"互联网大清遗老",nameEn:"Internet Relic",emoji:"🏛️",slogan:"现在的知乎真没法看了，想当年全都是各行业大佬认真答题……",longDesc:"你动不动就发长文痛批现在的社区风气、算法垃圾、用户素质堪忧。「想当年知乎刚开放注册的时候，全都是真大佬」——这句话你说了不下 100 次。\n\n你嘴上说着要退网，身体却很诚实地天天刷。你既是社区的批评者，也是社区的最忠实用户。\n\n沧桑感是你的盔甲，老网民身份是你最后的体面。",radar:{抬杠:3,吃瓜:3,摸鱼:2,emo:4,装x:4,潜水:4},partnerCode:"EMOO",enemyCode:"FAKE",rarity:"common",themeColor:"#a855f7"},
+  {code:"INVI",nameZh:"互联网透明小透明",nameEn:"Invisible Lurker",emoji:"👻",slogan:"别管我，我只是一只路过的阿米巴原虫。",longDesc:"注册账号几年了，你的主页比刚开荒的服务器还干净。零关注、零回答、零文章、零想法。\n\n你不是不想说，你只是觉得说什么都没意义。或者更诚实地说——你怕说错。\n\n你像一只阿米巴原虫，悄无声息地在互联网漂浮，吸收着信息却从不留下痕迹。",radar:{抬杠:1,吃瓜:4,摸鱼:4,emo:4,装x:2,潜水:5},partnerCode:"NERD",enemyCode:"BUTT",rarity:"common",themeColor:"#64748b"},
+  {code:"MIDD",nameZh:"评论区外交官",nameEn:"Comment Section Diplomat",emoji:"🕊️",slogan:"楼主说得对，但楼下也有道理。小孩子才做选择，我都喜欢。",longDesc:"看到任何争论你的第一反应都是：「其实双方都有道理，我们要辩证地看……」。\n\n你最讨厌非黑即白，最爱用「两面性」、「具体问题具体分析」、「我们要理解对方的立场」。你是评论区的灭火器，也是杠精的天敌。\n\n但有时候你的「中立」只是不想得罪任何人。这套外交辞令背后，藏着一个深谙人情世故的老灵魂。",radar:{抬杠:2,吃瓜:4,摸鱼:3,emo:2,装x:3,潜水:3},partnerCode:"ROAM",enemyCode:"BUTT",rarity:"common",themeColor:"#14b8a6"},
+  {code:"XEYO",nameZh:"谢邀型表演艺术家",nameEn:"Thanks-for-Inviting Performer",emoji:"🎭",slogan:"谢邀，人在火星，刚下 UFO，利益不相关，匿了。",longDesc:"你的每条回答都有一个完美的开头：「谢邀，利益相关/不相关，先说结论……」，然后下面跑题三万字，结论永远等不来。\n\n谢邀对你来说不是礼貌，是一种身份仪式——是知乎老用户最神圣的开场咒语。\n\n你不一定有真知灼见，但你一定会先把姿态摆足。这是知乎独有的赛博相声艺术。",radar:{抬杠:3,吃瓜:2,摸鱼:2,emo:2,装x:5,潜水:1},partnerCode:"FAKE",enemyCode:"INVI",rarity:"common",themeColor:"#d946ef"},
+  {code:"SAVE",nameZh:"活体赛博菩萨",nameEn:"Living Cyber Bodhisattva",emoji:"🕉️",slogan:"别慌，有我在。手把手教你，包教包会。",longDesc:"你大量回答过无人问津的冷门问题，给陌生求助者写过几千字的认真长文。你收到的「感谢」比「赞同」还多。\n\n你不是为了流量，也不是为了人设。你只是单纯地觉得——这个问题我会，那就好好回答。\n\n在充满戾气和炫耀的互联网，你是极其珍稀的赛博菩萨。功德 +999，建议大家立刻拜你保佑暴富。",radar:{抬杠:1,吃瓜:1,摸鱼:1,emo:2,装x:1,潜水:2},partnerCode:"CLAP",enemyCode:"FAKE",rarity:"ssr",themeColor:"#fbbf24"},
+  {code:"NULL",nameZh:"无痕冲浪祖师爷",nameEn:"Grandmaster of Incognito",emoji:"🥷",slogan:"十步杀一人，千里不留行。事了拂衣去，深藏功与名。",longDesc:"你的注册时间比知乎大V还早。你的累计阅读量是普通用户的 100 倍。但你没有头像、没有签名、没有任何互动痕迹。\n\n互联网拿你毫无办法。你像黑客帝国里觉醒的 Neo，行走在数据海洋之上却不留下一行 cookie。\n\n你是真正的潜水宗师，是 INVI 们仰望的传说。",radar:{抬杠:0,吃瓜:3,摸鱼:5,emo:1,装x:5,潜水:5},partnerCode:"BUTT",enemyCode:"XEYO",rarity:"ssr",themeColor:"#9333ea"}
+];
+const PERSONA_MAP = Object.fromEntries(PERSONAS.map(p=>[p.code,p]));
+
+/* 张某佳玮的三语气吐槽 */
+const TONES = {
+  serious:[
+    "ta 的回答字数中位数 4200 字，引用文献来自 13 个学科，「谢邀」出现频率 87%。",
+    "近 30 天发布的回答中，标题含「NBA」「巴黎」「佛罗伦萨」的占比超过 60%。",
+    "ta 平均每篇回答自我引用其它回答 2.4 次，构建了一个紧密的个人引用宇宙。"
+  ],
+  roast:[
+    "兄弟你不累吗，写个 NBA 都要拽两句普希金。",
+    "你的「利益相关」声明比正文还长，建议出本《如何优雅地装》。",
+    "上一段还在聊球，下一段你跨到了文艺复兴，第三段你居然回到了王朝。读你回答像坐过山车。"
+  ],
+  cute:[
+    "哇你写得好长好长好长呜呜，看完一篇人都晕了 (｡>﹏<｡)",
+    "好厉害呀好厉害呀，懂这么多事情的人是不是脑袋特别大鸭~",
+    "qaq 你又在说外国话了，能不能讲点我也听得懂的嘛"
+  ]
+};
+
+const ANALYZE_PHRASES = [
+  "正在调取你近 365 天的收藏夹 ...",
+  "检测到 1832 条《下次一定看》，已标记为「赛博囤积」 ...",
+  "统计你刷热榜的姿势 ... 你比 92% 的用户更热衷吃瓜",
+  "回溯你凌晨 2:17 的搜索历史 ...（系统正在温柔地沉默）",
+  "交叉比对 16 种神人特征向量 ...",
+  "调用 AI 毒舌模组 v2.6 ... 正在润色",
+  "生成你的知否代号中 ..."
+];
+
+/* ============ 渲染 16 人格 ============ */
+function renderPersonas(){
+  const g = document.getElementById('persona-grid');
+  g.innerHTML = PERSONAS.map((p,i)=>`
+    <div class="persona-card ${p.rarity==='ssr'?'ssr':''}" onclick="openPersona('${p.code}')">
+      <div class="p-num">No.${String(i+1).padStart(2,'0')}</div>
+      <div class="p-emoji">${p.emoji}</div>
+      <div>
+        <div class="p-code">· ${p.code} ·</div>
+        <div class="p-namezh">${p.nameZh}</div>
+        <div class="p-nameen">${p.nameEn}</div>
+      </div>
+      <div class="p-slogan">${p.slogan.length>50?p.slogan.slice(0,48)+'…':p.slogan}</div>
+    </div>
+  `).join('');
+}
+
+/* ============ Modal ============ */
+function openPersona(code){
+  const p = PERSONA_MAP[code]; if(!p) return;
+  const partner = PERSONA_MAP[p.partnerCode];
+  const enemy = PERSONA_MAP[p.enemyCode];
+  const idx = PERSONAS.findIndex(x=>x.code===code);
+  document.getElementById('m-num').textContent = `No.${String(idx+1).padStart(2,'0')} · CHAPTER I`;
+  document.getElementById('m-emoji').textContent = p.emoji;
+  document.getElementById('m-namezh').textContent = p.nameZh;
+  document.getElementById('m-nameen').textContent = p.nameEn;
+  document.getElementById('m-slogan').textContent = '"'+p.slogan+'"';
+  document.getElementById('m-long').textContent = p.longDesc;
+  document.getElementById('m-code').textContent = p.code;
+  document.getElementById('m-rarity').textContent = p.rarity.toUpperCase();
+  document.getElementById('m-theme').textContent = p.themeColor;
+  document.getElementById('m-partner-emoji').textContent = partner?partner.emoji:'';
+  document.getElementById('m-partner-name').textContent = partner?partner.nameZh:'—';
+  document.getElementById('m-partner').onclick = ()=>partner&&openPersona(partner.code);
+  document.getElementById('m-enemy-emoji').textContent = enemy?enemy.emoji:'';
+  document.getElementById('m-enemy-name').textContent = enemy?enemy.nameZh:'—';
+  document.getElementById('m-enemy').onclick = ()=>enemy&&openPersona(enemy.code);
+  const mask = document.getElementById('modal-mask');
+  mask.classList.add('open');
+  mask.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  document.getElementById('modal-mask').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ============ Radar SVG ============ */
+function drawRadar(radar){
+  const dims = ['抬杠','吃瓜','摸鱼','emo','装x','潜水'];
+  const dimsEn = ['SNARK','GOSSIP','IDLE','EMO','FLEX','LURK'];
+  const cx=200, cy=200, maxR=140, maxVal=5;
+  const n = dims.length;
+  let svg = '';
+  // 背景圈
+  for(let lv=1; lv<=maxVal; lv++){
+    const pts = [];
+    for(let i=0;i<n;i++){
+      const a = -Math.PI/2 + i*2*Math.PI/n;
+      const r = maxR*lv/maxVal;
+      pts.push(`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`);
+    }
+    svg += `<polygon points="${pts.join(' ')}" fill="none" stroke="#000" stroke-opacity="${lv===maxVal?0.6:0.15}" stroke-width="${lv===maxVal?1:0.5}"/>`;
+  }
+  // 轴线
+  for(let i=0;i<n;i++){
+    const a = -Math.PI/2 + i*2*Math.PI/n;
+    svg += `<line x1="${cx}" y1="${cy}" x2="${cx+maxR*Math.cos(a)}" y2="${cy+maxR*Math.sin(a)}" stroke="#000" stroke-opacity="0.15" stroke-width="0.5"/>`;
+  }
+  // 数据多边形
+  const datPts = dims.map((d,i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/n;
+    const v = radar[d]||0;
+    const r = maxR*v/maxVal;
+    return `${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;
+  }).join(' ');
+  svg += `<polygon points="${datPts}" fill="#000" fill-opacity="0.85" stroke="#000" stroke-width="2"/>`;
+  // 顶点圆点
+  dims.forEach((d,i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/n;
+    const v = radar[d]||0;
+    const r = maxR*v/maxVal;
+    svg += `<circle cx="${cx+r*Math.cos(a)}" cy="${cy+r*Math.sin(a)}" r="3.5" fill="#fff" stroke="#000" stroke-width="1.5"/>`;
+  });
+  // 轴标签
+  dims.forEach((d,i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/n;
+    const r = maxR+22;
+    const x = cx+r*Math.cos(a), y = cy+r*Math.sin(a);
+    svg += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display','Noto Serif SC',serif" font-weight="700" font-size="13" fill="#000">${d}</text>`;
+    svg += `<text x="${x}" y="${y+14}" text-anchor="middle" dominant-baseline="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#888" letter-spacing="1">${dimsEn[i]}</text>`;
+  });
+  document.getElementById('radar-svg').innerHTML = svg;
+  document.getElementById('radar-key').innerHTML = dims.map((d,i)=>
+    `<div><span>${dimsEn[i]}</span><span>${radar[d]}/5</span></div>`
+  ).join('');
+}
+
+/* ============ 语气切换 ============ */
+function renderTone(tone){
+  const list = document.getElementById('tone-list');
+  list.innerHTML = TONES[tone].map((t,i)=>`<li><span class="idx">${String(i+1).padStart(2,'0')}</span><span>${t}</span></li>`).join('');
+  document.querySelectorAll('#tone-switch button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tone===tone);
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.matches('#tone-switch button')) renderTone(e.target.dataset.tone);
+});
+
+/* ============ Fake Analyze ============ */
+function fakeAnalyze(){
+  const url = (document.getElementById('url-input').value||'').toLowerCase();
+  // 彩蛋：inside-egg
+  const isInsideEgg = url.includes('inside-egg');
+  const mask = document.getElementById('analyze-mask');
+  const bar = document.getElementById('analyze-bar');
+  const pct = document.getElementById('analyze-pct');
+  const txt = document.getElementById('analyze-text');
+  mask.classList.add('open');
+  let i=0, p=0;
+  txt.textContent = isInsideEgg ? '正在加载内部彩蛋 ... 请勿告诉老板' : ANALYZE_PHRASES[0];
+  bar.style.width='0%'; pct.textContent='0';
+  const tick = setInterval(()=>{
+    p += 4+Math.random()*6;
+    if(p>=100){p=100; clearInterval(tick); setTimeout(finishAnalyze, 500);}
+    bar.style.width = p+'%';
+    pct.textContent = Math.floor(p);
+  }, 180);
+  const phraseTick = setInterval(()=>{
+    i++;
+    if(i>=ANALYZE_PHRASES.length){clearInterval(phraseTick); return;}
+    if(!isInsideEgg) txt.textContent = ANALYZE_PHRASES[i];
+  }, 900);
+  function finishAnalyze(){
+    mask.classList.remove('open');
+    document.getElementById('profile').scrollIntoView({behavior:'smooth'});
+  }
+}
+
+/* ============ Quiz demo ============ */
+const SAMPLE_Q = [
+  {q:"刷到一篇万字干货《30 天精通 Python》，你的第一反应是？", opts:["马住，下次一定看（点击收藏 ⭐）","拉到底，评论一句「大佬牛逼」"], result:["MARK","CLAP"]},
+  {q:"热榜出现「某明星深夜被拍到与神秘人共进晚餐」，你？", opts:["前排出售瓜子矿泉水！让我们等更新","无聊。继续看我的宏观经济研报"], result:["MELO","NERD"]},
+  {q:"你的知乎主页现状是？", opts:["默认头像，零回答，零想法，零互动（已 8 年）","头像精修，签名长长一段，专栏 4 个"], result:["NULL","FAKE"]}
+];
+let quizIdx = 0;
+function nextQuiz(choice){
+  const q = SAMPLE_Q[quizIdx];
+  const hit = PERSONA_MAP[q.result[choice]];
+  quizIdx++;
+  if(quizIdx < SAMPLE_Q.length){
+    const nq = SAMPLE_Q[quizIdx];
+    document.querySelector('.q-num').innerHTML = `<em>Q</em>.${String(quizIdx+1).padStart(2,'0')}`;
+    document.querySelector('.q-progress').textContent = `Question ${String(quizIdx+1).padStart(2,'0')} / 15`;
+    document.getElementById('quiz-q').textContent = nq.q;
+    document.getElementById('quiz-opts').innerHTML = `
+      <button class="quiz-option" onclick="nextQuiz(0)">${nq.opts[0]}</button>
+      <button class="quiz-option opt-b" onclick="nextQuiz(1)">${nq.opts[1]}</button>`;
+  } else {
+    // 展示结果
+    document.querySelector('.quiz-top').innerHTML = `
+      <div class="q-num"><em>R</em>esult</div>
+      <div class="q-progress">Demo · End of 3 sample questions</div>`;
+    document.getElementById('quiz-q').innerHTML = `此题命中：<span style="font-style:italic">「${hit.nameZh}」 ${hit.emoji}</span>`;
+    document.getElementById('quiz-opts').innerHTML = `
+      <button class="quiz-option" onclick="openPersona('${hit.code}')" style="padding-left:24px">查看完整人格 →</button>
+      <button class="quiz-option opt-b" onclick="resetQuiz()" style="padding-left:24px">再玩一次 ↻</button>`;
+    document.querySelectorAll('.quiz-option')[1].classList.remove('opt-b');
+  }
+}
+function resetQuiz(){
+  quizIdx = 0;
+  const nq = SAMPLE_Q[0];
+  document.querySelector('.quiz-top').innerHTML = `
+    <div class="q-num"><em>Q</em>.01</div>
+    <div class="q-progress">Question 01 / 15</div>`;
+  document.getElementById('quiz-q').textContent = nq.q;
+  document.getElementById('quiz-opts').innerHTML = `
+    <button class="quiz-option" onclick="nextQuiz(0)">${nq.opts[0]}</button>
+    <button class="quiz-option opt-b" onclick="nextQuiz(1)">${nq.opts[1]}</button>`;
+}
+
+/* ============ Init ============ */
+renderPersonas();
+drawRadar({抬杠:2,吃瓜:2,摸鱼:1,emo:3,装x:5,潜水:2}); // 张某佳玮
+renderTone('serious');
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+
+</body>
+</html>

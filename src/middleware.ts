@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/dashboard")) {
+  if (pathname.startsWith("/")) {
     const token = request.cookies.get("access_token")?.value;
     if (!token) {
       return NextResponse.redirect(new URL("/", request.url));
@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// 需要进行判断的页面
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/:path*"]
 };

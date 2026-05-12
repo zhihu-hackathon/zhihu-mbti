@@ -1,43 +1,56 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+__pycache__/
+*.py[cod]
+*$py.class
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files
+venv/
+.env/
+.venv/
+env/
 .env
-.env.local
-.env.*.local
+pip-log.txt
+pip-delete-this-directory.txt
 
-# vercel
-.vercel
+*.egg-info/
+*.egg
+*.whl
+dist/
+build/
+site-packages/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+.idea/
+.vscode/
+*.iml
+
+*.log
+*.out
+*.pid
+*.swp
+*.swo
+*.swn
+*.bak
+
+.ipynb_checkpoints/
+
+.coverage
+.tox/
+.nox/
+htmlcov/
+
+
+.github/
+.gitlab-ci.yml
+
+
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+poetry.lock
+.mypy_cache/
+.dmypy.json
+ruff_cache/

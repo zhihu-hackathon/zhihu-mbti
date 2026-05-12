@@ -1,25 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exchangeCodeForToken } from "@/lib/zhihu";
+import { exchangeCodeForToken, fetchUserInfo } from "@/lib/func";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("authorization_code");
 
-  // const state = searchParams.get("state");
-  // const error = searchParams.get("error");
-
-  // if (error) {
-  //   return NextResponse.redirect(new URL(`/?error=${encodeURIComponent(error)}`, request.url));
-  // }
-
   if (!code) {
     return NextResponse.redirect(new URL("/?error=missing_params", request.url));
   }
-
-  // const savedState = request.cookies.get("oauth_state")?.value;
-  // if (!savedState || savedState !== state) {
-  //   return NextResponse.redirect(new URL("/?error=invalid_state", request.url));
-  // }
 
   const clientId = process.env.ZHIHU_CLIENT_ID;
   const clientSecret = process.env.ZHIHU_CLIENT_SECRET;
@@ -31,9 +19,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const tokenData = await exchangeCodeForToken(clientId, clientSecret, redirectUri, code, "authorization_code");
-    console.log(`token data access token: ${tokenData.access_token}`)
-    const dashboardUrl = new URL("/dashboard", process.env.APP_BASE_URL)
+    
+    // should remove in prod
+    console.log('begin to fetch user info');
+    const userInfo = await fetchUserInfo(tokenData.access_token);
+    console.log(`user: ${userInfo.uid} and fullname: ${userInfo.fullname} with token: ${tokenData.access_token}`);
+    const dashboardUrl = new URL("/", process.env.APP_BASE_URL);
     const res = NextResponse.redirect(dashboardUrl);
+    // save in cookies
     res.cookies.set("oauth_state", "", { path: "/", maxAge: 0 });
     res.cookies.set("access_token", tokenData.access_token, {
       httpOnly: true,

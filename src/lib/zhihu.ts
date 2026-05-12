@@ -12,6 +12,52 @@ export function getAuthUrl(appId: string, redirectUri: string) {
   return `${ZHIHU_BASE_URL}/authorize?${params.toString()}`;
 }
 
+type RetryOptions = {
+  retries?: number;
+  retryDelay?: number;
+  backoff?: 'fixed' | 'exponential';
+  retryOn?: (response: Response) => boolean;
+};
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function fetchWithRetry(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  options: RetryOptions = {}
+): Promise<Response> {
+  const {
+    retries = 3,
+    retryDelay = 1000,
+    backoff = 'exponential',
+    retryOn = (res) => !res.ok,
+  } = options;
+
+  let attempt = 0;
+
+  while (true) {
+    try {
+      const response = await fetch(input, init);
+
+      if (!retryOn(response) || attempt >= retries) {
+        return response;
+      }
+    } catch (err) {
+      // 网络错误（断网、DNS 失败等）也触发重试
+      if (attempt >= retries) throw err;
+    }
+
+    const delay =
+      backoff === 'exponential'
+        ? retryDelay * 2 ** attempt
+        : retryDelay;
+
+    await sleep(delay);
+    attempt++;
+  }
+
+}
+
 export async function exchangeCodeForToken(
   appId: string,
   appKey: string,
@@ -19,9 +65,8 @@ export async function exchangeCodeForToken(
   code: string,
   grantType: string
 ) {
-  const run = async (attempt: number) => {
-    console.log(`[Token Exchange] Attempt ${attempt}...`);
-    const res = await fetch(`${ZHIHU_BASE_URL}/access_token`, {
+
+    const res = await fetchWithRetry(`${ZHIHU_BASE_URL}/access_token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: new URLSearchParams({
@@ -31,6 +76,10 @@ export async function exchangeCodeForToken(
         redirect_uri: redirectUri,
         code: code
       }),
+    }, {
+      retries: 10,
+      retryDelay: 2000,
+      backoff: 'fixed',
     });
 
     if (res.status === 429) {
@@ -43,15 +92,7 @@ export async function exchangeCodeForToken(
       }
       throw new Error(`HTTP ${res.status}: ${text}`);
     }
-      return res.json() as Promise<{ access_token: string; token_type: string; expires_in: number; }>;
-    };
-
-    return pRetry(run, {
-      retries: 10,
-      onFailedAttempt: (error) => {
-        console.log(`Attempt ${error.attemptNumber} failed. ${error.retriesLeft} retries left.`);
-      },
-    });
+    return res.json() as Promise<{ access_token: string; token_type: string; expires_in: number; }>;
   }
 
 export async function fetchFollowedUsers(

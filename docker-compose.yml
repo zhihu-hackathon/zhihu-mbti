@@ -1,6 +1,13 @@
+
+version: "3.8"
 services:
   app:
     build: .
+    image: zhihu-mbti:latest
+    container_name: zhihu-mbti
+    restart: always
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     environment:
@@ -9,3 +16,7 @@ services:
       - ZHIHU_BASE_URL=${ZHIHU_BASE_URL}
       - ZHIHU_DATA_BASE_URL=${ZHIHU_DATA_BASE_URL}
       - APP_BASE_URL=${APP_BASE_URL}
+
+networks:
+  default:
+    name: zhihu-mbti-net

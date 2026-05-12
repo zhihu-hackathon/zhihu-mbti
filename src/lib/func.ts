@@ -1,6 +1,41 @@
 
 const ZHIHU_BASE_URL = process.env.ZHIHU_BASE_URL;
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  paging: {
+    is_end: boolean;
+    is_start: boolean;
+    next: string;
+    previous: string;
+    totals: number;
+  };
+}
+
+export interface Follow {
+  uid: number;
+  hash_id: string;
+  fullname: string;
+  gender: string;
+  headline: string;
+  description: string;
+  avatar_path: string;
+  url: string;
+  email: string;
+  phone_no: string;
+}
+
+export interface User {
+  uid: number;
+  fullname: string;
+  gender: string;
+  headline: string;
+  description: string;
+  avatar_path: string;
+  phone_no: string;
+  email: string;
+}
+
 export function getAuthUrl(appId: string, redirectUri: string) {
   const params = new URLSearchParams({
     app_id: appId,
@@ -91,6 +126,7 @@ export async function exchangeCodeForToken(
     return res.json() as Promise<{ access_token: string; token_type: string; expires_in: number; }>;
   }
 
+// 获取用户信息
 export async function fetchUserInfo(
   accessToken: string
 ) {
@@ -99,48 +135,47 @@ export async function fetchUserInfo(
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  return res.json() as Promise<{
-    uid: string;
-    fullname: string;
-    gender: string;
-    headline: string;
-    description: string;
-    avatar_path: string;
-    phone_no: string;
-    email: string;
-  }>;
-
+  return res.json() as Promise<User>;
 }
 
-export async function fetchFollowedUsers(
-  accessToken: string,
-  page = 0,
-  perPage = 20
-) {
-  const url = `${ZHIHU_BASE_URL}/user/followees?page=${page}&per_page=${perPage}`;
+
+// 粉丝列表
+export async function fetchFollowers(
+  accessToken: string, 
+  page: number = 0, 
+  perPage: number = 10): Promise<PaginatedResponse<Follow>> {
+  const url = `${ZHIHU_BASE_URL}/user/followers?page=${page}&per_page=${perPage}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Fetch followed failed: ${res.status} ${text}`);
-  }
-
-  return res.json() as Promise<{
-    data: ZhihuUser[]
-  }>;
+  return res.json() as Promise<PaginatedResponse<Follow>>;
 }
 
-export interface ZhihuUser {
-  uid: number;
-  hash_id: string;
-  fullname: string;
-  gender: string;
-  headline: string;
-  description: string;
-  avatar_path: string;
-  url: string;
-  email: string;
-  phone_no: string;
+// 关注列表
+export async function fetchFollowed(
+  accessToken: string, 
+  page: number = 0, 
+  perPage: number = 10): Promise<PaginatedResponse<Follow>> {
+
+  const url = `${ZHIHU_BASE_URL}/user/followed?page=${page}&per_page=${perPage}`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return res.json() as Promise<PaginatedResponse<Follow>>;
+
+}
+
+// 关注动态
+export async function fetchMoments(
+  accessToken: string
+) {
+
+  const url = `${ZHIHU_BASE_URL}/user/moments`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  
+  return res.json();
 }

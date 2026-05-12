@@ -6,14 +6,14 @@
 
 ```bash
 # 安装依赖
-npm install
+uv sync
 
 # 配置环境变量
-cp .env.example .env.local
-# 编辑 .env.local 填入知乎开放平台的 Client ID 和 Secret
+cp .env.example .env
+# 编辑 .env 填入相关环境变量
 
 # 启动开发服务器
-npm run dev
+fastapi run app.main:app --host 0.0.0.0 --port 8080
 ```
 
 ## 环境变量

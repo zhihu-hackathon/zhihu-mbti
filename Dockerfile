@@ -9,4 +9,4 @@ RUN uv sync --locked
 
 EXPOSE 8080
 
-ENTRYPOINT ["uv", "run", "--frozen", "--", "fastapi", "run", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+ENTRYPOINT ["uv", "run", "--frozen", "--", "fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]

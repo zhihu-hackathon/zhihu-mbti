@@ -115,7 +115,7 @@ export default function Dashboard() {
   };
 
   const filteredUsers = filterLabel
-    ? users.filter((u) => (labels[u.id] || []).includes(filterLabel))
+    ? users.filter((u) => (labels[u.uid] || []).includes(filterLabel))
     : users;
 
   const handleLogout = async () => {

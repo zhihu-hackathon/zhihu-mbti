@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { exchangeCodeForToken } from "@/lib/zhihu";
+import { exchangeCodeForToken, fetchUserInfo } from "@/lib/zhihu";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -31,8 +31,13 @@ export async function GET(request: NextRequest) {
 
   try {
     const tokenData = await exchangeCodeForToken(clientId, clientSecret, redirectUri, code, "authorization_code");
-    console.log(`token data access token: ${tokenData.access_token}`)
-    const dashboardUrl = new URL("/dashboard", process.env.APP_BASE_URL)
+    
+    // should remove in prod
+    console.log('begin to fetch user info');
+    const userInfo = await fetchUserInfo(tokenData.access_token);
+    console.log(`user: ${userInfo.uid} and fullname: ${userInfo.fullname} with token: ${tokenData.access_token}`);
+
+    const dashboardUrl = new URL("/dashboard", process.env.APP_BASE_URL);
     const res = NextResponse.redirect(dashboardUrl);
     res.cookies.set("oauth_state", "", { path: "/", maxAge: 0 });
     res.cookies.set("access_token", tokenData.access_token, {

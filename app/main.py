@@ -23,12 +23,13 @@ async def lifespan(app: FastAPI):
     sql_engine = create_engine(sql_url, echo=True)
 
     # 测试挂载卷
-    test_path = Path('/app/db')
+    test_path = Path('/app/db/test.text')
     if test_path.exists():
         print(f'{test_path} exist should delete')
         test_path.unlink()
     else:
         print(f'{test_path} not exist should create')
+        test_path.write_text('abc')
 
 
     app.state.thread_pool_executor = thread_pool_executor

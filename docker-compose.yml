@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ZHIHU_CLIENT_ID=${ZHIHU_CLIENT_ID}
+      - ZHIHU_CLIENT_SECRET=${ZHIHU_CLIENT_SECRET}
+      - ZHIHU_API_BASE=${ZHIHU_API_BASE}
+      - ZHIHU_DATA_API_BASE=${ZHIHU_DATA_API_BASE}
+      - APP_BASE_URL=${APP_BASE_URL}

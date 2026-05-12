@@ -7,17 +7,18 @@ export async function GET() {
     return NextResponse.json({ error: "ZHIHU_CLIENT_ID not configured" }, { status: 500 });
   }
 
-  const redirectUri = `${process.env.APP_BASE_URL || "http://localhost:8080"}/api/auth/callback`;
+  const redirectUri = `${process.env.APP_BASE_URL || "http://localhost:8080"}/api/oauth/callback`;
   const state = crypto.randomUUID().replace(/-/g, "");
+  console.log(`state: ${state}`)
 
-  const url = getAuthUrl(clientId, redirectUri, state);
+  const url = getAuthUrl(clientId, redirectUri);
 
   const res = NextResponse.redirect(url);
   res.cookies.set("oauth_state", state, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 600, // 10 minutes
+    maxAge: 600,
     path: "/",
   });
   return res;

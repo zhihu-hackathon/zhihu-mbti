@@ -1,33 +1,30 @@
+const ZHIHU_API_BASE = process.env.ZHIHU_API_BASE;
 
-const ZHIHU_API_BASE = process.env.ZHIHU_API_BASE
-const ZHIHU_TOKEN_URL = `${ZHIHU_API_BASE}/access_token`;
-
-export function getAuthUrl(clientId: string, redirectUri: string, state: string) {
+export function getAuthUrl(appId: string, redirectUri: string) {
   const params = new URLSearchParams({
-    client_id: clientId,
+    app_id: appId,
     redirect_uri: redirectUri,
-    response_type: "code",
-    state,
-    scope: "relationships_read",
+    response_type: "code"
   });
-  return `${ZHIHU_API_BASE}?${params.toString()}`;
+  return `${ZHIHU_API_BASE}/authorize?${params.toString()}`;
 }
 
 export async function exchangeCodeForToken(
+  appId: string,
+  appKey: string,
+  redirectUri: string,
   code: string,
-  clientId: string,
-  clientSecret: string,
-  redirectUri: string
+  grantType: string
 ) {
-  const res = await fetch(ZHIHU_TOKEN_URL, {
+  const res = await fetch(`${ZHIHU_API_BASE}/access_token`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: { "Content-Type": "application/json" },
     body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: "authorization_code",
-      code,
+      app_id: appId,
+      app_key: appKey,
+      grant_type: grantType,
       redirect_uri: redirectUri,
+      code: code
     }),
   });
 
@@ -40,7 +37,6 @@ export async function exchangeCodeForToken(
     access_token: string;
     token_type: string;
     expires_in: number;
-    refresh_token: string;
   }>;
 }
 

@@ -12,10 +12,10 @@ router = APIRouter(
 )
 
 @router.get(
-    path="/jobs/{id}",
-    summary="get job"
+    path="/test",
+    summary="test"
 )
-async def get_job(id: str):
+async def get_job():
     """根据job id 获取job的详细信息"""
     # 省略具体逻辑
     return 1

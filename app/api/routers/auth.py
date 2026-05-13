@@ -160,11 +160,11 @@ async def get_auth_status(request: Request, db_session: DBSessionDep):
        user = db_session.exec(select(User).where(User.uid == user_session.uid)).first()
        if user:
             return {'auth': True, 'user': {
-                'uid': user.uid,
-                'fullname': user.fullname,
+                'id': user.uid,
+                'name': user.name,
                 'gender': user.gender,
                 'headline': user.headline,
-                'avatar_path': user.avatar_path,
+                'avatar': user.avatar_path,
                 'description': user.description
             }}
        else:

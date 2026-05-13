@@ -10,6 +10,7 @@ from fastapi.routing import APIRouter
 from fastapi import Request, Response
 from app.api.deps import DBSessionDep
 from app.utils.http_client import AsyncHttpClient
+from app.db.session import UserSession
 from fastapi.responses import RedirectResponse
 from sqlmodel import select
 from app.db.user import User
@@ -18,12 +19,12 @@ from app.utils.log import get_logger
 logger = get_logger(__name__)
 
 router = APIRouter(
-    prefix="/oauth",
+    prefix="",
     tags=["Auth"]
 )
 
 @router.get(
-    path="/callback",
+    path="/oauth/callback",
     summary="oauth callback"
 )
 async def callback(request: Request, authorization_code: str, db_session: DBSessionDep, response: Response):
@@ -32,9 +33,9 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     '''
     if not authorization_code:
         return RedirectResponse("/")
-    SESSION_STORE = request.app.state.session_store
     session_id = request.cookies.get('session_id')
-    if not session_id or session_id not in SESSION_STORE:
+    user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
+    if (not session_id) and (not user_session):
         # logined
         return RedirectResponse("/")
     # get access token
@@ -99,7 +100,20 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
                 db_session.refresh(user)
 
         session_id = secrets.token_urlsafe(32)
-        SESSION_STORE[session_id] = user.uid
+        # upsert the session info
+        uid = user.uid
+        user_session = db_session.exec(select(UserSession).where(UserSession.uid == uid)).first()
+        if not user_session:
+            user_session.session_id = session_id
+            user_session.expires_in = expires_in
+        else:
+            user_session = UserSession(
+                uid=uid,
+                session_id=session_id,
+                expires_in=expires_in
+            )
+        db_session.add(user_session)
+        db_session.commit()
         # save to cookie
         response.set_cookie(
             key='session_id',
@@ -112,15 +126,35 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         return RedirectResponse('/')
 
 @router.post(
-    path="/logout",
+    path="/v1/auth/logout",
     summary="logout"
 )
-async def logout(request: Request, response: Response):
+async def logout(request: Request, response: Response, db_session: DBSessionDep):
     """logout"""
     # delete data in session
     session_id = request.cookies.get("session_id")
-    if not session_id:
-        SESSION_STORE = request.app.state.session_store
-        SESSION_STORE.pop(session_id, None)
+    user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
+    if (not session_id) and (not user_session):
+        # delete session
+        db_session.delete(user_session)
+        db_session.commit()
         response.delete_cookie("session_id")
     return RedirectResponse('/')
+
+# get auth status to update front-end
+@router.get(
+    path="/v1/auth/status",
+    summary="check auth status",
+    response_model_exclude_none=True
+)
+async def get_auth_status(request: Request, db_session: DBSessionDep):
+    session_id = request.cookies.get("session_id")
+    user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
+    if session_id and user_session:
+       # get user info
+       user = db_session.exec(select(User).where(User.uid == user_session.uid)).first()
+       if not user:
+            return {'auth': True, 'user': user}
+       else:
+            return {'auth': False, 'user': None}
+    return {'auth': False, 'user': None}

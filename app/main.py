@@ -2,12 +2,11 @@
 #-*- coding:utf-8 -*-
 
 from fastapi import FastAPI, status
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from sqlmodel import create_engine
-from app.api.routers import db, auth, index
+from app.api.routers import auth, db, index
 from sqlmodel import SQLModel
 from pathlib import Path
 from app.utils.log import get_logger
@@ -38,11 +37,6 @@ async def lifespan(app: FastAPI):
     base_dir = Path(__file__).resolve().parent
     templates = Jinja2Templates(directory=str(base_dir / "templates"))
     app.state.templates = templates
-    app.mount("/static", StaticFiles(directory=str(base_dir / "static")), name="static")
-
-    # save session_id and user uid
-    session_store: dict[str, int] = {}
-    app.state.session_store = session_store
 
     app.include_router(auth.router, prefix="/api")
     app.include_router(db.router, prefix="/api/v1")

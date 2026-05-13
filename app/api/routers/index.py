@@ -14,7 +14,7 @@ from app.api.deps import DBSessionDep, CurrUserDep
 logger = get_logger(__name__)
 
 router = APIRouter(
-    prefix='',
+    prefix="",
     tags=['Index']
 )
 

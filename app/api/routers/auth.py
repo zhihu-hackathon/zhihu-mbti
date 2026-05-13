@@ -46,9 +46,6 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     app_id = os.environ.get('ZHIHU_CLIENT_ID')
     app_key = os.environ.get('ZHIHU_CLIENT_SECRET')
     redirect_uri = f'{app_base_url}/api/oauth/callback'
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
     request_body = {
         'app_id': app_id,
         'app_key': app_key,
@@ -59,8 +56,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     access_token = None
     expires_in = None
     async with AsyncHttpClient(
-        base_url=base_url,
-        headers=headers
+        base_url=base_url
     ) as client:
         resp = await client.post(path='/access_token', json=request_body)
         if 'access_token' in resp:

@@ -138,6 +138,7 @@ def run_llm(base_url, sql_engine, uid, access_token):
         response = client.chat.completions.create(
             model="kimi-k2.6",
             messages=messages,
+            timeout=500.0,
             response_format={'type': 'json_object'}
         )
         tmp = json.loads(response.choices[0].message.content)

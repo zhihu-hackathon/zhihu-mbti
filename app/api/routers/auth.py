@@ -63,7 +63,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         base_url=base_url,
         headers=headers
     ) as client:
-        resp = await client.post(path='/access_token', json=request_body)
+        resp = await client.post_data(path='/access_token', json=request_body)
         if 'access_token' in resp:
             access_token = resp['access_token']
             expires_in = resp['expires_in']

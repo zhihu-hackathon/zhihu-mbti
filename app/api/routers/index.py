@@ -30,4 +30,5 @@ async def home(request: Request, db_session: DBSessionDep, curr_user: CurrUserDe
     else:
         # contains user info
         logger.info('user login')
+        # render user
         return templates.TemplateResponse(request=request, name="index.html")

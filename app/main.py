@@ -23,12 +23,13 @@ async def lifespan(app: FastAPI):
             db_path.mkdir(parents=True)
     else:
         logger.info(f'{str(db_path)} exist')
-    sql_path = str(db_path.joinpath('database.db'))
+    sql_path = db_path.joinpath('database.db')
 
     # init db
-    sql_url = f'sqlite:///{sql_path}'
+    sql_url = f'sqlite:///{str(sql_path)}'
     sql_engine = create_engine(sql_url, echo=True)
     app.state.sql_engine = sql_engine
+    app.state.sql_path = sql_path
     # init db
     SQLModel.metadata.create_all(sql_engine)
 

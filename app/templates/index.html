@@ -1175,7 +1175,7 @@ function getLoginUser(){
 function oauthLogin(){
   if(isLoggedIn()){ logout(); return; }
   const mask = document.getElementById('oauth-mask');
-  oauthUrl = 'https://www.zhihu.com/oauth/authorize?client_id=234&response_type=code&redirect_uri=https%3A%2F%2Fzhihu-mbti.zeabur.app%2Fapi%2Foauth%2Fcallback';
+  oauthUrl = 'https://openapi.zhihu.com/authorize?redirect_uri=https%3A%2F%2Fzhihu-mbti.zeabur.app%2Fapi%2Foauth%2Fcallback&app_id=234&response_type=code';
   document.getElementById('oauth-url').textContent = oauthUrl;
   document.getElementById('oauth-sub').textContent =
     'An illustration · 演示版本';

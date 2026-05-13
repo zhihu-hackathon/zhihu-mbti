@@ -142,8 +142,9 @@ def logout(request: Request, response: Response, db_session: DBSessionDep):
     # delete data in session
     session_id = request.cookies.get("session_id")
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
-    if (not session_id) and (not user_session):
+    if session_id and user_session:
         # delete session
+        logger.warning('logout session is not null')
         db_session.delete(user_session)
         db_session.commit()
     redirect = RedirectResponse(url='/', status_code=302)

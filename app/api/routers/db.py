@@ -84,6 +84,7 @@ async def get_user_sessions(db_session: DBSessionDep):
 )
 async def delete_user_session(id: int, db_session: DBSessionDep):
     res = db_session.exec(select(UserSession).where(UserSession.uid == id)).all()
-    db_session.delete(res)
+    for item in res:
+        db_session.delete(item)
     db_session.commit()
     return {'status': 'ok'}

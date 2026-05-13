@@ -656,8 +656,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 const LOGIN_KEY = 'zhifou_login';
 function syncLoginState() {
     fetch('/api/v1/auth/status', { credentials: 'include' }) // 必须带上 cookie
-        .then(res => res.json())
+        .then(res => {
+          console.log(`res json is ${res.json()}`)
+          return res.json()
+        })
         .then(data => {
+            console.log(`data is ${data}`)
             if (data.auth) {
                 console.log('已经登录')
                 localStorage.setItem(LOGIN_KEY, JSON.stringify(data.user));

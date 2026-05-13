@@ -10,6 +10,7 @@ from fastapi.routing import APIRouter
 from app.utils.log import get_logger
 from app.api.deps import DBSessionDep
 from app.db.user import User
+from app.db.session import UserSession
 from app.models.user import UserReq
 from sqlmodel import select, delete
 
@@ -66,3 +67,12 @@ async def drop_db(request: Request):
     sql_path = request.app.state.sql_path
     sql_path.unlink(missing_ok=True)
     return {'status': 'ok'}
+
+
+@router.get(
+    path="/user-sessions",
+    summary="获取所有user sessions",
+    response_model_exclude_none=True
+)
+async def get_user_sessions(db_session: DBSessionDep):
+    return db_session.exec(select(UserSession)).all()

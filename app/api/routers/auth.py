@@ -31,13 +31,14 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     '''
     handle oauth callback
     '''
-    logger.info('runs in callback')
     if not authorization_code:
+        logger.warning('error code not exist')
         return RedirectResponse("/")
     session_id = request.cookies.get('session_id')
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
-    if (not session_id) and (not user_session):
+    if session_id and user_session:
         # logined
+        logger.warning('user logged')
         return RedirectResponse("/")
     # get access token
     base_url = os.environ.get('ZHIHU_BASE_URL')
@@ -67,6 +68,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         else:
             logger.error(f"get access token failed with code: {resp['code']} and data: {resp['data']}")
     if not access_token or not expires_in:
+        logger.warning('get access token failed')
         return RedirectResponse('/')
     else:
         # use token to get user info

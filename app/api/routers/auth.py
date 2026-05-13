@@ -56,7 +56,6 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         'redirect_uri': redirect_uri,
         'code': authorization_code
     }
-    logger.warning(f'request body for access token: {request_body}')
     access_token = None
     expires_in = None
     async with AsyncHttpClient(
@@ -159,8 +158,15 @@ async def get_auth_status(request: Request, db_session: DBSessionDep):
     if session_id and user_session:
        # get user info
        user = db_session.exec(select(User).where(User.uid == user_session.uid)).first()
-       if not user:
-            return {'auth': True, 'user': user}
+       if user:
+            return {'auth': True, 'user': {
+                'uid': user.uid,
+                'fullname': user.fullname,
+                'gender': user.gender,
+                'headline': user.headline,
+                'avatar_path': user.avatar_path,
+                'description': user.description
+            }}
        else:
             return {'auth': False, 'user': None}
     return {'auth': False, 'user': None}

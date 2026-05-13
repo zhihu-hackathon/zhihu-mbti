@@ -76,3 +76,14 @@ async def drop_db(request: Request):
 )
 async def get_user_sessions(db_session: DBSessionDep):
     return db_session.exec(select(UserSession)).all()
+
+@router.delete(
+    path="/user-sessions/{id}",
+    summary="删除某个session",
+    response_model_exclude_none=True
+)
+async def delete_user_session(id: int, db_session: DBSessionDep):
+    res = db_session.exec(select(UserSession).where(UserSession.uid == id)).all()
+    db_session.delete(res)
+    db_session.commit()
+    return {'status': 'ok'}

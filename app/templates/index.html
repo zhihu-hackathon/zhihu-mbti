@@ -659,8 +659,10 @@ function syncLoginState() {
         .then(res => res.json())
         .then(data => {
             if (data.auth) {
+                console.log('已经登录')
                 localStorage.setItem(LOGIN_KEY, JSON.stringify(data.user));
             } else {
+                console.log('未登录')
                 localStorage.removeItem(LOGIN_KEY);
             }
         })

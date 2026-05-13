@@ -22,7 +22,7 @@ router = APIRouter(
     path="/",
     response_class=HTMLResponse
 )
-async def home(request: Request, db_session: DBSessionDep, curr_user: CurrUserDep):
+def home(request: Request, db_session: DBSessionDep, curr_user: CurrUserDep):
     templates = request.app.state.templates
     if not curr_user:
         logger.info('current user not login')

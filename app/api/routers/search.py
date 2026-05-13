@@ -6,7 +6,7 @@ from fastapi.routing import APIRouter
 from app.utils.log import get_logger
 from app.api.deps import CurrUserDep
 from fastapi import HTTPException, status
-from app.utils.http_client import AsyncHttpClient
+from app.utils.http_client import SyncHttpClient
 
 logger = get_logger(__name__)
 
@@ -20,7 +20,7 @@ router = APIRouter(
     summary='调用直达api获取结果',
     response_model_exclude_none=True
 )
-async def search(curr_user: CurrUserDep):
+def search(curr_user: CurrUserDep):
     if not curr_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
     # get user comments
@@ -31,11 +31,11 @@ async def search(curr_user: CurrUserDep):
     # get user moments
     access_token = curr_user.access_token
     json_str = ''
-    async with AsyncHttpClient(
+    with SyncHttpClient(
         base_url=base_url,
         headers={'Authorization': f'Bearer {access_token}'}
     ) as client:
-        resp = await client.get('/user/moments')
+        resp = client.get('/user/moments')
         if 'data' in resp:
             json_str = json.dumps(resp['data'])
     system_prompt = f"""
@@ -128,10 +128,10 @@ async def search(curr_user: CurrUserDep):
     request_body = {
         'Content-Type': 'application/json'
     }
-    async with AsyncHttpClient(
+    with SyncHttpClient(
         base_url=data_base_url,
         headers={'Authorization': f'Bearer {access_token}'}
     ) as client:
-        resp = await client.post(path='/v1/chat/completions', json=request_body)
-        
+        resp = client.post(path='/v1/chat/completions', json=request_body)
+
     pass

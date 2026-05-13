@@ -26,7 +26,7 @@ router = APIRouter(
     summary="get all user data",
     response_model_exclude_none=True
 )
-async def list_users(db_session: DBSessionDep) -> list[User]:
+def list_users(db_session: DBSessionDep) -> list[User]:
     """获取所有用户数据"""
     return db_session.exec(select(User)).all()
 
@@ -35,7 +35,7 @@ async def list_users(db_session: DBSessionDep) -> list[User]:
     summary='create user',
     response_model_exclude_none=True
 )
-async def create_user(db_session: DBSessionDep, params: UserReq):
+def create_user(db_session: DBSessionDep, params: UserReq):
     '''
     创建测试用户
     '''
@@ -50,7 +50,7 @@ async def create_user(db_session: DBSessionDep, params: UserReq):
     summary='删除',
     response_model_exclude_none=True
 )
-async def delete_users(db_session: DBSessionDep):
+def delete_users(db_session: DBSessionDep):
     '''
     删除所有用户
     '''
@@ -63,7 +63,7 @@ async def delete_users(db_session: DBSessionDep):
     summary='删除整个db',
     response_model_exclude_none=True
 )
-async def drop_db(request: Request):
+def drop_db(request: Request):
     sql_path = request.app.state.sql_path
     sql_path.unlink(missing_ok=True)
     return {'status': 'ok'}
@@ -74,7 +74,7 @@ async def drop_db(request: Request):
     summary="获取所有user sessions",
     response_model_exclude_none=True
 )
-async def get_user_sessions(db_session: DBSessionDep):
+def get_user_sessions(db_session: DBSessionDep):
     return db_session.exec(select(UserSession)).all()
 
 @router.delete(
@@ -82,7 +82,7 @@ async def get_user_sessions(db_session: DBSessionDep):
     summary="删除某个session",
     response_model_exclude_none=True
 )
-async def delete_user_session(id: int, db_session: DBSessionDep):
+def delete_user_session(id: int, db_session: DBSessionDep):
     res = db_session.exec(select(UserSession).where(UserSession.uid == id)).all()
     for item in res:
         db_session.delete(item)

@@ -9,7 +9,7 @@ import os, secrets
 from fastapi.routing import APIRouter
 from fastapi import Request, Response
 from app.api.deps import DBSessionDep
-from app.utils.http_client import AsyncHttpClient
+from app.utils.http_client import SyncHttpClient
 from app.db.session import UserSession
 from fastapi.responses import RedirectResponse
 from sqlmodel import select
@@ -27,7 +27,7 @@ router = APIRouter(
     path="/oauth/callback",
     summary="oauth callback"
 )
-async def callback(request: Request, authorization_code: str, db_session: DBSessionDep, response: Response):
+def callback(request: Request, authorization_code: str, db_session: DBSessionDep, response: Response):
     '''
     handle oauth callback
     '''
@@ -58,11 +58,11 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     }
     access_token = None
     expires_in = None
-    async with AsyncHttpClient(
+    with SyncHttpClient(
         base_url=base_url,
         headers=headers
     ) as client:
-        resp = await client.post_data(path='/access_token', json=request_body)
+        resp = client.post_data(path='/access_token', json=request_body)
         if 'access_token' in resp:
             access_token = resp['access_token']
             expires_in = resp['expires_in']
@@ -77,11 +77,11 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         headers = {
             'Authorization': f'Bearer {access_token}'
         }
-        async with AsyncHttpClient(
+        with SyncHttpClient(
             base_url=base_url,
             headers=headers
         ) as client:
-            resp = await client.get(path='/user')
+            resp = client.get(path='/user')
             if 'code' in resp or 'data' in resp:
                 logger.error(f"get user info failed with code: {resp['code']} and data: {resp['data']}")
                 return RedirectResponse('/')
@@ -134,7 +134,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     path="/v1/auth/logout",
     summary="logout"
 )
-async def logout(request: Request, response: Response, db_session: DBSessionDep):
+def logout(request: Request, response: Response, db_session: DBSessionDep):
     """logout"""
     # delete data in session
     session_id = request.cookies.get("session_id")
@@ -152,7 +152,7 @@ async def logout(request: Request, response: Response, db_session: DBSessionDep)
     summary="check auth status",
     response_model_exclude_none=True
 )
-async def get_auth_status(request: Request, db_session: DBSessionDep):
+def get_auth_status(request: Request, db_session: DBSessionDep):
     session_id = request.cookies.get("session_id")
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
     if session_id and user_session:

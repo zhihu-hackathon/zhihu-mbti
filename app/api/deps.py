@@ -7,7 +7,7 @@ from fastapi import Depends, Request
 
 # db session function
 async def get_session(request: Request):
-    engine = request.app.sql_engine
+    engine = request.app.state.sql_engine
     session = Session(engine)
     try:
         yield session

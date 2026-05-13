@@ -1246,7 +1246,8 @@ function renderAuthState(){
     const u = getLoginUser();
     slot.innerHTML = `
       <div class="user-pill">
-        <span class="av">${u.avatar}</span>
+        <img class="av" src="${u.avatar}" alt="${u.name || u.id}" 
+         onerror="this.style.display='none'">
         <span>${u.name||u.id}</span>
         <span class="lo" onclick="rerollProfile()" title="重新随机一个 OAuth 用户（仅演示用）">🎲</span>
         <span class="lo" onclick="logout()">登出</span>

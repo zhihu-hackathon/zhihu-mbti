@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from sqlmodel import create_engine
@@ -39,8 +41,16 @@ async def lifespan(app: FastAPI):
         pass
 
 app = FastAPI(title='zhihu-mbti', summary='zhihu mbti', version='1.0', lifespan=lifespan)
+# 
+base_dir = Path(__file__).resolve().parent
+templates = Jinja2Templates(directory=str(base_dir / "templates"))
+app.mount("/static", StaticFiles(directory=str(base_dir / "static")), name="static")
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(db.router, prefix="/api/v1")
+
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.exception_handler(Exception)

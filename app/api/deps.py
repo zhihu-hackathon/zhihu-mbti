@@ -8,7 +8,7 @@ from app.db.session import UserSession
 from fastapi import Depends, Request, HTTPException, Response, status
 
 # db session function
-async def get_session(request: Request):
+def get_session(request: Request):
     engine = request.app.state.sql_engine
     session = Session(engine)
     try:
@@ -19,7 +19,7 @@ async def get_session(request: Request):
 DBSessionDep = Annotated[Session, Depends(get_session)]
 
 # get user
-async def get_curr_user(request: Request, db_session: DBSessionDep):
+def get_curr_user(request: Request, db_session: DBSessionDep):
     session_id = request.cookies.get('session_id')
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
     if not session_id or not user_session:

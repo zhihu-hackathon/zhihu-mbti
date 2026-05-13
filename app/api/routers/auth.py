@@ -120,7 +120,7 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
         db_session.add(user_session)
         db_session.commit()
         # save to cookie
-        logger.info(f'logincallback 写入cookie之前session_id: ${session_id}')
+        logger.warning(f'logincallback 写入cookie之前session_id: ${session_id}')
         response.set_cookie(
             key='session_id',
             value=session_id,

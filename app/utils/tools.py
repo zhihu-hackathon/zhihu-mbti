@@ -5,7 +5,16 @@
 tools
 '''
 
-import time, hashlib, hmac, base64
+import time, hashlib, hmac, base64, functools
+
+def timeit(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        print(f'{func.__name__} total_time: {time.time() - start:.3f}s')
+        return result
+    return wrapper
 
 async def gen_timestamp():
     '''

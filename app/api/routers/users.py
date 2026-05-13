@@ -7,8 +7,8 @@ from app.utils.log import get_logger
 logger = get_logger(__name__)
 
 router = APIRouter(
-    prefix='/tests',
-    tags=['tests']
+    prefix='/users',
+    tags=['Users']
 )
 
 @router.get(
@@ -19,4 +19,3 @@ async def get_job():
     """根据job id 获取job的详细信息"""
     # 省略具体逻辑
     return 1
-

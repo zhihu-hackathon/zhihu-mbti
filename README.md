@@ -13,7 +13,7 @@ cp .env.example .env
 # 编辑 .env 填入相关环境变量
 
 # 启动开发服务器
-fastapi run app.main:app --host 0.0.0.0 --port 8080
+fastapi run app/main.py --host 0.0.0.0 --port 8080
 ```
 
 ## 环境变量

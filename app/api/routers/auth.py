@@ -154,9 +154,11 @@ def logout(request: Request, response: Response, db_session: DBSessionDep):
 )
 def get_auth_status(request: Request, db_session: DBSessionDep):
     session_id = request.cookies.get("session_id")
+    logger.info(f'当前session id is ${session_id}')
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
     if session_id and user_session:
        # get user info
+       logger.info(f'当前session id is ${session_id} 以及 user session: ${user_session}')
        user = db_session.exec(select(User).where(User.uid == user_session.uid)).first()
        if user:
             return {'auth': True, 'user': {
@@ -169,4 +171,5 @@ def get_auth_status(request: Request, db_session: DBSessionDep):
             }}
        else:
             return {'auth': False, 'user': None}
+    logger.info(f'当前false结果 session id is ${session_id} 以及 user session: ${user_session}')
     return {'auth': False, 'user': None}

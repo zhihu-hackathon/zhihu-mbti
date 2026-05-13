@@ -42,16 +42,17 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         return RedirectResponse("/")
     # get access token
     base_url = os.environ.get('ZHIHU_BASE_URL')
+    app_base_url = os.environ.get('APP_BASE_URL')
     app_id = os.environ.get('ZHIHU_CLIENT_ID')
     app_key = os.environ.get('ZHIHU_CLIENT_SECRET')
-    redirect_uri = f'{base_url}/api/oauth/callback'
+    redirect_uri = f'{app_base_url}/api/oauth/callback'
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     request_body = {
         'app_id': app_id,
         'app_key': app_key,
-        'grant_type': authorization_code,
+        'grant_type': 'authorization_code',
         'redirect_uri': redirect_uri,
         'code': authorization_code
     }

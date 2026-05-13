@@ -51,7 +51,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     request_body = {
         'app_id': app_id,
         'app_key': app_key,
-        'grant_type': 'authorization_code',
+        'grant_type': authorization_code,
         'redirect_uri': redirect_uri,
         'code': authorization_code
     }

@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from sqlmodel import create_engine
 from app.api.routers import test, auth
 from pathlib import Path
-from utils.log import get_logger
+from app.utils.log import get_logger
 
 logger = get_logger(__name__)
 
@@ -30,6 +30,8 @@ async def lifespan(app: FastAPI):
             db_path.mkdir(parents=True)
     else:
         logger.info(f'{str(db_path)} exist')
+    
+    # init db
 
     try:
         yield

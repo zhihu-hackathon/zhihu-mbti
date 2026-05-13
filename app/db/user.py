@@ -21,6 +21,7 @@ class User(SQLModel, table=True):
     avatar_path: Annotated[str | None, Field(nullable=True)]
     phone_no: Annotated[str | None, Field(nullable=True)]
     email: Annotated[str | None, Field(nullable=True)]
+    access_token: Annotated[str | None, Field(nullable=True)]
     tag: Annotated[str | None, Field(nullable=True)]
     create_time: Annotated[datetime, Field(default_factory=lambda: datetime.now(timezone.utc))]
     update_time: Annotated[datetime | None, Field(default=None)]

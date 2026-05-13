@@ -53,6 +53,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         'redirect_uri': redirect_uri,
         'code': authorization_code
     }
+    logger.warning(f'request body for access token: {request_body}')
     access_token = None
     expires_in = None
     async with AsyncHttpClient(

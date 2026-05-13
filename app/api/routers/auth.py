@@ -98,7 +98,8 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
                     description=resp['description'],
                     avatar_path=resp['avatar_path'],
                     phone_no=resp['phone_no'],
-                    email=resp['email']
+                    email=resp['email'],
+                    access_token=access_token
                 )
                 db_session.add(user)
                 db_session.commit()

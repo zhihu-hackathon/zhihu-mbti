@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from sqlmodel import create_engine
-from app.api.routers import auth, db, index
+from app.api.routers import auth, db, index, quiz
 from sqlmodel import SQLModel
 from pathlib import Path
 from app.utils.log import get_logger
@@ -40,6 +40,7 @@ async def lifespan(app: FastAPI):
 
     app.include_router(auth.router, prefix="/api")
     app.include_router(db.router, prefix="/api/v1")
+    app.include_router(quiz.router, prefix="/api/v1")
     app.include_router(index.router, prefix="")
 
     try:

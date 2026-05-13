@@ -120,11 +120,12 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
         db_session.add(user_session)
         db_session.commit()
         # save to cookie
+        logger.info(f'logincallback 写入cookie之前session_id: ${session_id}')
         response.set_cookie(
             key='session_id',
             value=session_id,
-            httponly=True,
-            secure=True,
+            httponly=False,
+            secure=False,
             samesite="lax",
             max_age=expires_in
         )
@@ -154,9 +155,11 @@ def logout(request: Request, response: Response, db_session: DBSessionDep):
 )
 def get_auth_status(request: Request, db_session: DBSessionDep):
     session_id = request.cookies.get("session_id")
+    logger.info(f'当前session id is ${session_id}')
     user_session = db_session.exec(select(UserSession).where(UserSession.session_id == session_id)).first()
     if session_id and user_session:
        # get user info
+       logger.info(f'当前session id is ${session_id} 以及 user session: ${user_session}')
        user = db_session.exec(select(User).where(User.uid == user_session.uid)).first()
        if user:
             return {'auth': True, 'user': {
@@ -169,4 +172,5 @@ def get_auth_status(request: Request, db_session: DBSessionDep):
             }}
        else:
             return {'auth': False, 'user': None}
+    logger.info(f'当前false结果 session id is ${session_id} 以及 user session: ${user_session}')
     return {'auth': False, 'user': None}

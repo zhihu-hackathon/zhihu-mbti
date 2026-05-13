@@ -124,8 +124,8 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
         response.set_cookie(
             key='session_id',
             value=session_id,
-            httponly=True,
-            secure=True,
+            httponly=False,
+            secure=False,
             samesite="lax",
             max_age=expires_in
         )

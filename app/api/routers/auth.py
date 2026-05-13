@@ -167,7 +167,7 @@ def get_auth_status(request: Request, db_session: DBSessionDep):
        if user:
             return {'auth': True, 'user': {
                 'id': user.uid,
-                'name': user.name,
+                'name': user.fullname,
                 'gender': user.gender,
                 'headline': user.headline,
                 'avatar': user.avatar_path,

@@ -124,10 +124,11 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
         response.set_cookie(
             key='session_id',
             value=session_id,
-            httponly=False,
-            secure=False,
-            samesite="lax",
-            max_age=expires_in
+            httponly=True,
+            secure=True,
+            samesite="strict",
+            max_age=expires_in,
+            path="/"
         )
         return RedirectResponse('/')
 

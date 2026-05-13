@@ -7,6 +7,7 @@ from app.utils.log import get_logger
 from app.api.deps import CurrUserDep
 from fastapi import HTTPException, status
 from app.utils.http_client import SyncHttpClient
+from openai import OpenAI
 
 logger = get_logger(__name__)
 
@@ -24,10 +25,7 @@ def search(curr_user: CurrUserDep):
     if not curr_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
     # get user comments
-    data_base_url = os.environ.get('ZHIHU_DATA_BASE_URL')
-    user_secret = os.environ.get('ZHIHU_USER_SECRET')
     base_url = os.environ.get('ZHIHU_BASE_URL')
-
     # get user moments
     access_token = curr_user.access_token
     json_str = ''
@@ -125,13 +123,25 @@ def search(curr_user: CurrUserDep):
     # Input Data (用户动态JSON数据):
     {json_str}
     """
-    request_body = {
-        'Content-Type': 'application/json'
-    }
-    with SyncHttpClient(
-        base_url=data_base_url,
-        headers={'Authorization': f'Bearer {access_token}'}
-    ) as client:
-        resp = client.post(path='/v1/chat/completions', json=request_body)
 
-    pass
+    llm_base_url = os.environ.get('LLM_BASE_URL')
+    llm_api_key = os.environ.get('LLM_API_KEY')
+    from openai import OpenAI
+
+    client = OpenAI(
+        api_key=llm_api_key,
+        base_url=llm_base_url,
+    )
+    
+    messages = [
+        {"role": "system", "content": system_prompt}
+    ]
+
+    response = client.chat.completions.create(
+        model="kimi-k2.6",
+        messages=messages,
+        response_format={'type': 'json_object'}
+    )
+    res = response.choices[0].message.content
+    # save res
+    

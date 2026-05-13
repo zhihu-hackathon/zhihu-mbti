@@ -109,7 +109,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
         # upsert the session info
         uid = user.uid
         user_session = db_session.exec(select(UserSession).where(UserSession.uid == uid)).first()
-        if not user_session:
+        if user_session:
             user_session.session_id = session_id
             user_session.expires_in = expires_in
         else:

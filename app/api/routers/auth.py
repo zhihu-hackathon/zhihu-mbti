@@ -86,7 +86,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
             if 'code' in resp or 'data' in resp:
                 logger.error(f"get user info failed with code: {resp['code']} and data: {resp['data']}")
                 return RedirectResponse('/')
-            uid = user['uid']
+            uid = resp['uid']
             # check user in table
             user = db_session.exec(select(User).where(User.uid == uid)).first()
             if not user:
@@ -98,7 +98,8 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
                     description=resp['description'],
                     avatar_path=resp['avatar_path'],
                     phone_no=resp['phone_no'],
-                    email=resp['email']
+                    email=resp['email'],
+                    access_token=access_token
                 )
                 db_session.add(user)
                 db_session.commit()

@@ -31,6 +31,7 @@ async def callback(request: Request, authorization_code: str, db_session: DBSess
     '''
     handle oauth callback
     '''
+    logger.info('runs in callback')
     if not authorization_code:
         return RedirectResponse("/")
     session_id = request.cookies.get('session_id')

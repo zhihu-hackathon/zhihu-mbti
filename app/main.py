@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
     templates = Jinja2Templates(directory=str(base_dir / "templates"))
     app.state.templates = templates
 
-    thread_pool_executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix='test')
+    thread_pool_executor = ThreadPoolExecutor(max_workers=20, thread_name_prefix='bk')
     app.state.thread_pool_executor = thread_pool_executor
 
     app.include_router(auth.router, prefix="/api")
@@ -52,7 +52,15 @@ async def lifespan(app: FastAPI):
     finally:
         pass
 
-app = FastAPI(title='zhihu-mbti', summary='zhihu mbti', version='1.0', lifespan=lifespan)
+# close all docs
+app = FastAPI(
+    title='zhihu-mbti', 
+    summary='zhihu mbti', 
+    version='1.0', 
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+    lifespan=lifespan)
 
 
 @app.exception_handler(Exception)

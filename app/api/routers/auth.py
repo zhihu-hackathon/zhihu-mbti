@@ -12,7 +12,7 @@ from app.api.deps import DBSessionDep
 from app.utils.http_client import SyncHttpClient
 from app.db.session import UserSession
 from fastapi.responses import RedirectResponse
-from sqlmodel import select
+from sqlmodel import select, update
 from app.db.user import User
 from app.utils.log import get_logger
 
@@ -103,7 +103,12 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
                 db_session.add(user)
                 db_session.commit()
                 db_session.refresh(user)
-
+            else:
+                # update user access token
+                user.access_token = access_token
+                db_session.add(user)
+                db_session.commit()
+                db_session.refresh(user)
         session_id = secrets.token_urlsafe(32)
         # upsert the session info
         uid = user.uid

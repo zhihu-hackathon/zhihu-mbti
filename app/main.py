@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-from fastapi import FastAPI, status, Request
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from sqlmodel import create_engine
-from app.api.routers import db, auth
+from app.api.routers import auth, db, index
 from sqlmodel import SQLModel
 from pathlib import Path
 from app.utils.log import get_logger
@@ -35,22 +34,20 @@ async def lifespan(app: FastAPI):
     # init db
     SQLModel.metadata.create_all(sql_engine)
 
+    base_dir = Path(__file__).resolve().parent
+    templates = Jinja2Templates(directory=str(base_dir / "templates"))
+    app.state.templates = templates
+
+    app.include_router(auth.router, prefix="/api")
+    app.include_router(db.router, prefix="/api/v1")
+    app.include_router(index.router, prefix="")
+
     try:
         yield
     finally:
         pass
 
 app = FastAPI(title='zhihu-mbti', summary='zhihu mbti', version='1.0', lifespan=lifespan)
-# 
-base_dir = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(base_dir / "templates"))
-app.mount("/static", StaticFiles(directory=str(base_dir / "static")), name="static")
-app.include_router(auth.router, prefix="/api/v1")
-app.include_router(db.router, prefix="/api/v1")
-
-@app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse(request, "index.html")
 
 
 @app.exception_handler(Exception)

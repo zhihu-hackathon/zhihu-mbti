@@ -46,7 +46,7 @@ async def create_user(db_session: DBSessionDep, params: UserReq):
 
 @router.delete(
     path="/users",
-    summary='扇出',
+    summary='删除',
     response_model_exclude_none=True
 )
 async def delete_users(db_session: DBSessionDep):

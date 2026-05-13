@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from sqlmodel import create_engine
 from app.api.routers import db, auth
+from sqlmodel import SQLModel
 from pathlib import Path
 from app.utils.log import get_logger
 
@@ -28,6 +29,8 @@ async def lifespan(app: FastAPI):
     sql_url = f'sqlite:///{sql_path}'
     sql_engine = create_engine(sql_url, echo=True)
     app.state.sql_engine = sql_engine
+    # init db
+    SQLModel.metadata.create_all(sql_engine)
 
     try:
         yield

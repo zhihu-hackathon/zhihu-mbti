@@ -1234,6 +1234,19 @@ function oauthCancel(){
   document.body.style.overflow = '';
 }
 function logout(){
+  // logout request to server
+  fetch('/v1/auth/logout', 
+    { 
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+  .then(res => {
+    console.log('HTTP状态:', res.status);
+    return res.json();
+  }).then(data => {
+    console.log('logout data is', data)
+  })
   localStorage.removeItem(LOGIN_KEY);
   renderAuthState();
 }

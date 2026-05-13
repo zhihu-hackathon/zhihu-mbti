@@ -24,6 +24,16 @@ router = APIRouter(
 )
 
 @router.get(
+    path="/llm-executor",
+    summary="llm-executor",
+    response_model_exclude_none=True
+)
+def test_llm_executor(request: Request):
+    thread_pool_executor = request.app.state.thread_pool_executor
+    thread_pool_executor.submit(test_llm)
+    pass
+
+@router.get(
     path="/llm",
     summary='test llm'
 )
@@ -38,7 +48,6 @@ def test_llm():
         resp = client.get('/user/moments')
         if 'data' in resp:
             json_str = json.dumps(resp['data'], ensure_ascii=False)
-    print(json_str)
     system_prompt = f"""
     # Role: 知乎赛博心理学分析师 & 社交图谱分类专家
 
@@ -140,7 +149,6 @@ def test_llm():
     ]
 
     res = handle_llm(client, messages)
-    print(res)
     tag = res['persona_name']
     return {'status': 'ok'}
 

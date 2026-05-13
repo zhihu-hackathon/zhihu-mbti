@@ -9,6 +9,7 @@ from sqlmodel import create_engine
 from app.api.routers import auth, db, index, quiz
 from sqlmodel import SQLModel
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 from app.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -37,6 +38,9 @@ async def lifespan(app: FastAPI):
     base_dir = Path(__file__).resolve().parent
     templates = Jinja2Templates(directory=str(base_dir / "templates"))
     app.state.templates = templates
+
+    thread_pool_executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix='test')
+    app.state.thread_pool_executor = thread_pool_executor
 
     app.include_router(auth.router, prefix="/api")
     app.include_router(db.router, prefix="/api/v1")

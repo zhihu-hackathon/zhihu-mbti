@@ -121,16 +121,17 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
         db_session.commit()
         # save to cookie
         logger.warning(f'logincallback 写入cookie之前session_id: ${session_id}')
-        response.set_cookie(
+        redirect = RedirectResponse(url='/', status_code=302)
+        redirect.set_cookie(
             key='session_id',
             value=session_id,
             httponly=True,
             secure=True,
-            samesite="strict",
+            samesite="lax",
             max_age=expires_in,
             path="/"
         )
-        return RedirectResponse('/')
+        return redirect
 
 @router.post(
     path="/v1/auth/logout",
@@ -145,8 +146,9 @@ def logout(request: Request, response: Response, db_session: DBSessionDep):
         # delete session
         db_session.delete(user_session)
         db_session.commit()
-        response.delete_cookie("session_id")
-    return RedirectResponse('/')
+    redirect = RedirectResponse(url='/', status_code=302)
+    redirect.delete_cookie("session_id")
+    return redirect
 
 # get auth status to update front-end
 @router.get(

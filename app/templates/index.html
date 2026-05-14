@@ -446,7 +446,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <div style="flex:1;min-width:280px">
       <span class="label" style="color:#666">Sample · 一份完整鉴定报告长什么样</span>
       <h3 style="font-family:'Playfair Display','Noto Serif SC',serif;font-weight:900;font-style:italic;font-size:clamp(32px,4vw,52px);line-height:1.05;letter-spacing:-.02em;margin-top:12px">想先看看<em style="font-style:italic;font-weight:900">判决书</em>什么样？</h3>
-      <p style="font-style:italic;color:#666;margin-top:12px;max-width:560px">这里有一份现成的样例：张某佳玮 · CODE FAKE · 精神年薪百万。点击进入独立结果页，可一键切换 AI 解释口吻。</p>
+      <p style="font-style:italic;color:#666;margin-top:12px;max-width:560px">这里有一份现成的样例，登录后可查看你的专属报告。点击进入独立结果页，可一键切换 AI 解释口吻。</p>
     </div>
     <button class="btn-filled" style="padding:18px 32px;font-size:12px" onclick="showSampleResult()">查看示例报告 →</button>
   </div>
@@ -1004,7 +1004,13 @@ function showResultPage(opts){
   document.getElementById('r-source').textContent = srcLabel;
 
   // subject card
-  document.getElementById('r-av').textContent = opts.subject.avatar || '👤';
+  const rAv = document.getElementById('r-av');
+  const avVal = opts.subject.avatar || '👤';
+  if(/^https?:\/\//.test(avVal)){
+    rAv.innerHTML = `<img src="${avVal}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent='👤'">`;
+  } else {
+    rAv.textContent = avVal;
+  }
   document.getElementById('r-nick').textContent = opts.subject.nick || '@匿名玩家';
   document.getElementById('r-bio').textContent = opts.subject.bio || '—';
   const verEl = document.getElementById('r-verified');
@@ -1064,9 +1070,13 @@ function renderResultTone(tone){
 
 function showSampleResult(){
   const u = SAMPLE_USERS[0]; // 张某佳玮
+  const loginUser = getLoginUser();
+  const subject = loginUser
+    ? {nick:'@'+(loginUser.name||loginUser.id), avatar:loginUser.avatar, bio:loginUser.headline||loginUser.description||'', verifiedTag:'示例报告 · OAuth 已授权'}
+    : {nick:'@'+u.nick, avatar:u.avatar, bio:u.bio, verifiedTag:'示例数据 · 与真人无关'};
   showResultPage({
     source:'sample',
-    subject:{nick:'@'+u.nick, avatar:u.avatar, bio:u.bio, verifiedTag:'示例数据 · 与真人无关'},
+    subject,
     primaryCode:u.primary, secondaryCode:u.secondary,
     primaryPct:u.primaryPct, secondaryPct:u.secondaryPct,
     radar:u.radar, tones:u.tones
@@ -1147,9 +1157,9 @@ function runAnalyze(quizScores, quizCount){
       source: 'url',
       sourceLabel,
       subject: {
-        nick: '@' + u.nick,
-        avatar: u.avatar,
-        bio: u.bio,
+        nick: '@' + (loginUser.name || loginUser.id),
+        avatar: loginUser.avatar,
+        bio: loginUser.headline || loginUser.description || '',
         verifiedTag: 'OAuth 已授权 · ' + (quizCount > 0 ? `+ ${quizCount} 题问卷` : '直接鉴定')
       },
       primaryCode: u.primary,
@@ -1263,7 +1273,7 @@ function renderAuthState(){
         <img class="av" src="${u.avatar}" alt="${u.name || u.id}" 
          onerror="this.style.display='none'">
         <span>${u.name||u.id}</span>
-        <span class="lo" onclick="rerollProfile()" title="重新随机一个 OAuth 用户（仅演示用）">🎲</span>
+        <span class="lo" onclick="rerollProfile()" title="刷新用户信息">🔄</span>
         <span class="lo" onclick="logout()">登出</span>
       </div>`;
     gate.classList.remove('active');
@@ -1277,22 +1287,10 @@ function renderAuthState(){
   }
 }
 
-/* 演示用：随机换一个绑定的 OAuth profile（不弹 OAuth 流程） */
+/* 重新从服务端同步用户信息 */
 function rerollProfile(){
   if(!isLoggedIn()) return;
-  const pool = SAMPLE_USERS.filter(u=>!u.isInsideEgg);
-  const cur = getLoginUser();
-  let profile;
-  do { profile = pool[Math.floor(Math.random()*pool.length)]; }
-  while(pool.length>1 && SAMPLE_USERS.indexOf(profile)===cur.sampleIdx);
-  const user = {
-    sampleIdx: SAMPLE_USERS.indexOf(profile),
-    id: '知乎某神人', name: '知乎某神人',
-    avatar: '👤', bio: profile.bio,
-    loginAt: cur.loginAt
-  };
-  localStorage.setItem(LOGIN_KEY, JSON.stringify(user));
-  renderAuthState();
+  syncLoginState();
 }
 
 /* ============ Quiz · 20 题完整版 ============ */

@@ -1063,7 +1063,8 @@ function renderResultTone(tone){
 }
 
 function showSampleResult(){
-  const u = SAMPLE_USERS[0]; // 张某佳玮
+  const u = localStorage.getItem(LOGIN_KEY) ?? SAMPLE_USERS[0];
+  //const u = SAMPLE_USERS[0]; // 张某佳玮
   showResultPage({
     source:'sample',
     subject:{nick:'@'+u.nick, avatar:u.avatar, bio:u.bio, verifiedTag:'示例数据 · 与真人无关'},

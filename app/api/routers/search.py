@@ -8,6 +8,7 @@ from app.api.deps import CurrUserDep
 from fastapi import HTTPException, status
 from app.utils.http_client import SyncHttpClient
 from openai import OpenAI
+from app.api.deps import DBSessionDep
 
 logger = get_logger(__name__)
 
@@ -21,7 +22,7 @@ router = APIRouter(
     summary='调用直达api获取结果',
     response_model_exclude_none=True
 )
-def search(curr_user: CurrUserDep):
+def search(curr_user: CurrUserDep, db_session: DBSessionDep):
     if not curr_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='unauthorized')
     # get user comments
@@ -35,7 +36,7 @@ def search(curr_user: CurrUserDep):
     ) as client:
         resp = client.get('/user/moments')
         if 'data' in resp:
-            json_str = json.dumps(resp['data'])
+            json_str = json.dumps(resp['data'], ensure_ascii=False)
     system_prompt = f"""
     # Role: 知乎赛博心理学分析师 & 社交图谱分类专家
 
@@ -126,7 +127,6 @@ def search(curr_user: CurrUserDep):
 
     llm_base_url = os.environ.get('LLM_BASE_URL')
     llm_api_key = os.environ.get('LLM_API_KEY')
-    from openai import OpenAI
 
     client = OpenAI(
         api_key=llm_api_key,
@@ -137,11 +137,20 @@ def search(curr_user: CurrUserDep):
         {"role": "system", "content": system_prompt}
     ]
 
-    response = client.chat.completions.create(
-        model="kimi-k2.6",
-        messages=messages,
-        response_format={'type': 'json_object'}
-    )
-    res = response.choices[0].message.content
-    # save res
-    
+    try:
+        response = client.chat.completions.create(
+            model="kimi-k2.6",
+            messages=messages,
+            response_format={'type': 'json_object'}
+        )
+        res = json.loads(response.choices[0].message.content)
+        # save result int db
+        tag = res['persona_name']
+        curr_user.tag = tag
+        db_session.add(curr_user)
+        db_session.commit()
+        db_session.refresh(curr_user)
+        return {'status': 'ok'}
+    except Exception as e:
+        logger.error('call llm failed', e)
+        return {'status': 'failed'}

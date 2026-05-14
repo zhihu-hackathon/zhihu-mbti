@@ -1003,8 +1003,14 @@ function showResultPage(opts){
   const srcLabel = opts.sourceLabel || ({url:'URL Reading · OAuth 鉴定结果', quiz:'Quiz Result · 问卷鉴定结果', sample:'Sample · 示例报告'}[opts.source||'url']);
   document.getElementById('r-source').textContent = srcLabel;
 
-  // subject card
-  document.getElementById('r-av').textContent = opts.subject.avatar || '👤';
+  // subject card — avatar: URL(OAuth) 渲染 <img>, emoji 渲染文本
+  const rAv = document.getElementById('r-av');
+  const avVal = opts.subject.avatar || '👤';
+  if(/^https?:\/\//.test(avVal)){
+    rAv.innerHTML = '<img src="'+avVal+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.textContent=\'👤\'">';
+  } else {
+    rAv.textContent = avVal;
+  }
   document.getElementById('r-nick').textContent = opts.subject.nick || '@匿名玩家';
   document.getElementById('r-bio').textContent = opts.subject.bio || '—';
   const verEl = document.getElementById('r-verified');
@@ -1063,10 +1069,15 @@ function renderResultTone(tone){
 }
 
 function showSampleResult(){
-  const u = SAMPLE_USERS[0]; // 张某佳玮
+  const u = SAMPLE_USERS[0]; // 张某佳玮 — persona 数据来源
+  const loginUser = getLoginUser();
+  // 已登录：subject 卡片用真实 OAuth 用户信息；未登录：用示例数据
+  const subject = loginUser
+    ? {nick:'@'+(loginUser.name||loginUser.id), avatar:loginUser.avatar, bio:loginUser.headline||loginUser.description||'', verifiedTag:'示例报告 · OAuth 已授权'}
+    : {nick:'@'+u.nick, avatar:u.avatar, bio:u.bio, verifiedTag:'示例数据 · 与真人无关'};
   showResultPage({
     source:'sample',
-    subject:{nick:'@'+u.nick, avatar:u.avatar, bio:u.bio, verifiedTag:'示例数据 · 与真人无关'},
+    subject,
     primaryCode:u.primary, secondaryCode:u.secondary,
     primaryPct:u.primaryPct, secondaryPct:u.secondaryPct,
     radar:u.radar, tones:u.tones
@@ -1147,9 +1158,9 @@ function runAnalyze(quizScores, quizCount){
       source: 'url',
       sourceLabel,
       subject: {
-        nick: '@' + u.nick,
-        avatar: u.avatar,
-        bio: u.bio,
+        nick: '@' + (loginUser.name || loginUser.id),
+        avatar: loginUser.avatar,
+        bio: loginUser.headline || loginUser.description || '',
         verifiedTag: 'OAuth 已授权 · ' + (quizCount > 0 ? `+ ${quizCount} 题问卷` : '直接鉴定')
       },
       primaryCode: u.primary,
@@ -1263,7 +1274,7 @@ function renderAuthState(){
         <img class="av" src="${u.avatar}" alt="${u.name || u.id}" 
          onerror="this.style.display='none'">
         <span>${u.name||u.id}</span>
-        <span class="lo" onclick="rerollProfile()" title="重新随机一个 OAuth 用户（仅演示用）">🎲</span>
+        <span class="lo" onclick="rerollProfile()" title="刷新用户信息">🔄</span>
         <span class="lo" onclick="logout()">登出</span>
       </div>`;
     gate.classList.remove('active');
@@ -1277,22 +1288,10 @@ function renderAuthState(){
   }
 }
 
-/* 演示用：随机换一个绑定的 OAuth profile（不弹 OAuth 流程） */
+/* 重新从服务端同步用户信息 */
 function rerollProfile(){
   if(!isLoggedIn()) return;
-  const pool = SAMPLE_USERS.filter(u=>!u.isInsideEgg);
-  const cur = getLoginUser();
-  let profile;
-  do { profile = pool[Math.floor(Math.random()*pool.length)]; }
-  while(pool.length>1 && SAMPLE_USERS.indexOf(profile)===cur.sampleIdx);
-  const user = {
-    sampleIdx: SAMPLE_USERS.indexOf(profile),
-    id: '知乎某神人', name: '知乎某神人',
-    avatar: '👤', bio: profile.bio,
-    loginAt: cur.loginAt
-  };
-  localStorage.setItem(LOGIN_KEY, JSON.stringify(user));
-  renderAuthState();
+  syncLoginState();
 }
 
 /* ============ Quiz · 20 题完整版 ============ */

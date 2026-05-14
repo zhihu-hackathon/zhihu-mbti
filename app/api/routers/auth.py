@@ -5,7 +5,7 @@
 auth router
 '''
 
-import os, secrets, json
+import os, secrets, json, time
 from fastapi.routing import APIRouter
 from sqlmodel import Session
 from fastapi import Request, Response
@@ -160,6 +160,7 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
     '''
     handle oauth callback
     '''
+    start = time.time()
     if not authorization_code:
         logger.warning('error code not exist')
         return RedirectResponse("/")
@@ -269,6 +270,7 @@ def callback(request: Request, authorization_code: str, db_session: DBSessionDep
             max_age=expires_in,
             path="/"
         )
+        logger.warning(f'callback duration: {time.time() - start:.3f}s')
         return redirect
 
 @router.post(

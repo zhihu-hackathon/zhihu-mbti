@@ -504,12 +504,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <div class="oauth-body">
       <span class="label">Zhihu OAuth 2.0 · Authorization Flow</span>
       <h3>正在登录知乎</h3>
-      <div class="sub" id="oauth-sub">An illustration</div>
+      <div class="sub" id="oauth-sub">约需 3–5 秒，请勿关闭页面 ⏳</div>
       <div class="oauth-steps" id="oauth-steps">
-        <div class="oauth-step active" data-i="0"><span class="num">1</span><span>Redirecting to zhihu.com/oauth/authorize ...</span></div>
-        <div class="oauth-step" data-i="1"><span class="num">2</span><span>用户授权 → 收到 authorization_code</span></div>
-        <div class="oauth-step" data-i="2"><span class="num">3</span><span>POST /oauth/token → access_token</span></div>
-        <div class="oauth-step" data-i="3"><span class="num">4</span><span>GET /api/v4/me → 用户信息</span></div>
+        <div class="oauth-step active" data-i="0"><span class="num">1</span><span>正在敲开知乎的大门……</span></div>
+        <div class="oauth-step" data-i="1"><span class="num">2</span><span>即将弹出知乎授权页，请点击「确认授权」  ← 关键！预告下一步</span></div>
+        <div class="oauth-step" data-i="2"><span class="num">3</span><span>正在偷看你的"谢邀"次数……</span></div>
+        <div class="oauth-step" data-i="3"><span class="num">4</span><span>AI 正在给你贴标签……</span></div>
       </div>
       <div style="text-align:right">
         <button class="oauth-cancel" onclick="oauthCancel()">取消</button>
@@ -1185,7 +1185,7 @@ function oauthLogin(){
   oauthUrl = 'https://openapi.zhihu.com/authorize?redirect_uri=https%3A%2F%2Fzhihu-mbti.zeabur.app%2Fapi%2Foauth%2Fcallback&app_id=234&response_type=code';
   document.getElementById('oauth-url').textContent = oauthUrl;
   document.getElementById('oauth-sub').textContent =
-    'An illustration · 演示版本';
+    '请勿关闭页面 ⏳';
   fetch('')
   // 重置 steps
   const steps = document.querySelectorAll('#oauth-steps .oauth-step');

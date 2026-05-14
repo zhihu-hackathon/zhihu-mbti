@@ -3,7 +3,7 @@
 
 from app.utils.log import get_logger
 from fastapi.routing import APIRouter
-from app.api.deps import DBSessionDep
+from app.api.deps import DBSessionDep, CurrUserDep
 
 logger = get_logger(__name__)
 
@@ -26,5 +26,6 @@ def get_res():
     summary='create quiz',
     response_model_exclude_none=True
 )
-def create_quiz():
+def create_quiz(curr_user: CurrUserDep):
+    
     pass

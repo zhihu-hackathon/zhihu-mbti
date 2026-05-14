@@ -551,7 +551,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   <div class="result-body">
     <!-- 被测用户卡 -->
     <div class="subject-card" style="margin-bottom:48px">
-      <img class="av" id="r-av"/>
+      <div class="av" id="r-av">🥷</div>
       <div class="info">
         <span class="label">Subject · 被鉴定者</span>
         <div class="nick" id="r-nick">@匿名玩家</div>
@@ -1004,7 +1004,7 @@ function showResultPage(opts){
   document.getElementById('r-source').textContent = srcLabel;
 
   // subject card
-  document.getElementById('r-av').src = opts.subject.avatar || '👤';
+  document.getElementById('r-av').textContent = opts.subject.avatar || '👤';
   document.getElementById('r-nick').textContent = opts.subject.nick || '@匿名玩家';
   document.getElementById('r-bio').textContent = opts.subject.bio || '—';
   const verEl = document.getElementById('r-verified');
@@ -1094,7 +1094,7 @@ function startReading(quizCount){
 function runAnalyze(quizScores, quizCount){
   const loginUser = getLoginUser();
   if(!loginUser){ flashGate(); return; }
-  const u = loginUser || SAMPLE_USERS[0];
+  const u = SAMPLE_USERS[loginUser.sampleIdx] || SAMPLE_USERS[0];
   const mask = document.getElementById('analyze-mask');
   const bar = document.getElementById('analyze-bar');
   const pct = document.getElementById('analyze-pct');
@@ -1147,9 +1147,9 @@ function runAnalyze(quizScores, quizCount){
       source: 'url',
       sourceLabel,
       subject: {
-        nick: '@' + u.nick || u.name,
+        nick: '@' + u.nick,
         avatar: u.avatar,
-        bio: u.bio || u.headline,
+        bio: u.bio,
         verifiedTag: 'OAuth 已授权 · ' + (quizCount > 0 ? `+ ${quizCount} 题问卷` : '直接鉴定')
       },
       primaryCode: u.primary,

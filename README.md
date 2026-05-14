@@ -25,6 +25,8 @@ fastapi run app/main.py --host 0.0.0.0 --port 8080
 | `ZHIHU_BASE_URL` | 知乎开放平台 base url |
 | `ZHIHU_DATA_BASE_URL` | 知乎数据平台 base url |
 | `APP_BASE_URL` | 应用部署地址（默认 http://localhost:8080） |
+| `LLM_BASE_URL` | LLM 平台url |
+| `LLM_API_KEY`| LLM 平台api key |
 
 ## 功能
 

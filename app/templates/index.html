@@ -1105,7 +1105,19 @@ function startReading(quizCount){
 function runAnalyze(quizScores, quizCount){
   const loginUser = getLoginUser();
   if(!loginUser){ flashGate(); return; }
-  const u = SAMPLE_USERS[loginUser.sampleIdx] || SAMPLE_USERS[0];
+  // 根据 tag(中文名) 模糊匹配 SAMPLE_USER，否则随机分配
+  const _tag = (loginUser.tag||'').replace(/[\/／].*$/,'').trim();
+  let u = null;
+  if(_tag){
+    u = SAMPLE_USERS.find(s => {
+      const zh = PERSONA_MAP[s.primary]?.nameZh || '';
+      return zh === _tag || zh.includes(_tag) || _tag.includes(zh);
+    });
+  }
+  if(!u){
+    const pool = SAMPLE_USERS.filter(s=>!s.isInsideEgg);
+    u = pool[Math.floor(Math.random()*pool.length)];
+  }
   const mask = document.getElementById('analyze-mask');
   const bar = document.getElementById('analyze-bar');
   const pct = document.getElementById('analyze-pct');
@@ -1137,23 +1149,30 @@ function runAnalyze(quizScores, quizCount){
   }, 900);
   function finishAnalyze(){
     mask.classList.remove('open');
-    // 副人格融合：若问卷 Top 与主人格不同 → 用问卷 Top
+    // 问卷分数决定 primaryCode 和 secondaryCode
+    let primaryCode = u.primary;
     let secondaryCode = u.secondary;
     if(quizScores && Object.keys(quizScores).length > 0){
       const sorted = Object.entries(quizScores).sort((a,b)=>b[1]-a[1]);
-      const quizTop = sorted[0]?.[0];
-      if(quizTop && quizTop !== u.primary){
-        secondaryCode = quizTop;
-      } else if(sorted[1] && sorted[1][0] !== u.primary){
-        secondaryCode = sorted[1][0];
+      // 同分时加入随机扰动
+      const topScore = sorted[0][1];
+      const tied = sorted.filter(s=>s[1]===topScore);
+      const quizTop = tied[Math.floor(Math.random()*tied.length)][0];
+      primaryCode = quizTop;
+      if(sorted.length > 1){
+        const secondScore = sorted.find(s=>s[0]!==quizTop)?.[1] || sorted[1][1];
+        const tied2 = sorted.filter(s=>s[0]!==quizTop && s[1]===secondScore);
+        secondaryCode = tied2[Math.floor(Math.random()*tied2.length)][0];
       }
     }
     const boost = quizCount === 0 ? 0 : quizCount === 5 ? 4 : quizCount === 10 ? 7 : 11;
-    const primaryPct = Math.min(99, (u.primaryPct||80) + boost);
-    const secondaryPct = Math.min(95, (u.secondaryPct||60) + Math.floor(boost*0.6));
+    const primaryPct = Math.min(99, (PERSONA_MAP[primaryCode]?.rarity==='SSR' ? 96 : 80) + Math.floor(Math.random()*10) + boost);
+    const secondaryPct = Math.min(95, 60 + Math.floor(Math.random()*10) + Math.floor(boost*0.6));
     const sourceLabel = quizCount === 0
       ? 'M.01 · OAuth Direct · 仅行为数据鉴定'
       : `M.0${quizCount===5?2:quizCount===10?3:4} · OAuth + ${quizCount} 题问卷融合鉴定`;
+    // 获取对应 persona 的 radar 和 tones
+    const matchedUser = SAMPLE_USERS.find(s=>s.primary===primaryCode) || u;
     showResultPage({
       source: 'url',
       sourceLabel,
@@ -1163,11 +1182,11 @@ function runAnalyze(quizScores, quizCount){
         bio: loginUser.headline || loginUser.description || '',
         verifiedTag: 'OAuth 已授权 · ' + (quizCount > 0 ? `+ ${quizCount} 题问卷` : '直接鉴定')
       },
-      primaryCode: u.primary,
+      primaryCode,
       secondaryCode,
       primaryPct, secondaryPct,
-      radar: u.radar,
-      tones: u.tones
+      radar: matchedUser.radar,
+      tones: matchedUser.tones
     });
   }
 }

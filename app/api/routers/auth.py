@@ -312,7 +312,8 @@ def get_auth_status(request: Request, db_session: DBSessionDep):
                 'gender': user.gender,
                 'headline': user.headline,
                 'avatar': user.avatar_path,
-                'description': user.description
+                'description': user.description,
+                'tag': user.tag or ''
             }}
        else:
             logger.warning(f'当前user 为空 结果 session id is {session_id} 以及 user session: {user_session}')
